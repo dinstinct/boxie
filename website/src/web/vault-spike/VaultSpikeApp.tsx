@@ -756,7 +756,7 @@ export function VaultSpikeApp() {
       );
       await refresh(user, client);
       if (recoveryRequested && remoteCleanupComplete && localCleanupComplete) {
-        window.location.replace("/?onboarding=1&recovered=1");
+        window.location.replace("/?cloudVault=1&recovered=1");
       }
     });
   }
@@ -991,7 +991,7 @@ function SpikeFrame({ children }: { children: React.ReactNode }) {
     <header className="spike-hero">
       <a href="/" aria-label="Return to Boxie"><img src="/brand/boxie-avatar.png" alt="" /></a>
       <div><span>Boxie labs</span><h1>Encrypted device-pairing spike</h1><p>Device-held keys · explicit encrypted sync · no AI provider</p></div>
-      <a className="spike-back" href="/?onboarding=1"><ArrowLeft /> Back to setup</a>
+      <a className="spike-back" href="/?cloudVault=1"><ArrowLeft /> Back to setup</a>
     </header>
     <div className="spike-content">{children}</div>
   </main>;

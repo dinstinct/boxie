@@ -62,14 +62,14 @@ function selectedAccount(result: AuthenticationResult): SelectedOutlookAccount {
   };
 }
 
-export async function chooseOutlookAccount(): Promise<SelectedOutlookAccount> {
+export async function chooseOutlookAccount(returnPath = "/?onboarding=1"): Promise<SelectedOutlookAccount> {
   const client = await application();
   window.sessionStorage.setItem(outlookRedirectPendingKey, "1");
   try {
     await client.loginRedirect({
       scopes: graphScopes,
       prompt: "select_account",
-      redirectStartPage: `${window.location.origin}/?onboarding=1`
+      redirectStartPage: `${window.location.origin}${returnPath}`
     });
   } catch (error) {
     window.sessionStorage.removeItem(outlookRedirectPendingKey);
@@ -101,9 +101,14 @@ export async function consumeOutlookRedirectAccount(): Promise<SelectedOutlookAc
     if (!result) {
       throw new Error("Microsoft returned without an Outlook account selection.");
     }
+    const selected = selectedAccount(result);
+    if (selected.tenantId !== "9188040d-6c67-4c5b-b112-36a304b66dad") {
+      await client.clearCache({account: result.account!});
+      throw new Error("Boxie currently supports personal Outlook accounts. Work and school accounts stay separate and are not supported yet.");
+    }
     client.setActiveAccount(result.account);
     await validateMailboxToken(result.accessToken);
-    return selectedAccount(result);
+    return selected;
   } finally {
     window.sessionStorage.removeItem(outlookRedirectPendingKey);
   }

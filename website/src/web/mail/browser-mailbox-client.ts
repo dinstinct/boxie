@@ -85,6 +85,9 @@ export class BrowserMailboxClient implements MailboxClient {
       ...client.status,
       localStorage: await ensureBrowserStorageHealth()
     };
+    if (!options.cloudReplicator && client.status.localStorage?.warning) {
+      client.status.localStorage.warning = client.status.localStorage.warning.replace("Encrypted backup remains available.", "Cloud backup is not enabled for this local inbox.");
+    }
     await client.reproject();
     client.replicateEncryptedMailbox();
     return client;

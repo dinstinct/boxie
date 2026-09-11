@@ -27,11 +27,11 @@ if (window.location.pathname === "/feedback") {
   void import("./vault-spike/VaultSpikeApp").then(({ VaultSpikeApp }) => {
     createRoot(root).render(<StrictMode><VaultSpikeApp /></StrictMode>);
   });
-} else if (isOnboarding) {
+} else if (new URLSearchParams(window.location.search).get("cloudVault") === "1") {
   void import("./onboarding/OnboardingApp").then(({ OnboardingApp }) => {
     createRoot(root).render(<StrictMode><OnboardingApp /></StrictMode>);
   });
-} else if (isBrowserMailbox) {
+} else if (isBrowserMailbox || isOnboarding || new URLSearchParams(window.location.search).get("cloudMailbox") === "1" || ["/app", "/app/"].includes(window.location.pathname)) {
   void import("./mail/BrowserMailboxApp").then(({ BrowserMailboxApp }) => {
     createRoot(root).render(<StrictMode><BrowserMailboxApp /></StrictMode>);
   });

@@ -1,6 +1,6 @@
 import {doc, runTransaction, serverTimestamp} from 'firebase/firestore';
 import {createFirebaseSpikeClient} from '../vault-spike/firebase-client';
-export const release = 'web-2026-09-06';
+export const release = 'web-2026-09-11';
 export const codes = ['startup', 'sync', 'signin', 'uncaught', 'other'] as const;
 export type ReportCode = typeof codes[number];
 export function safeCode(value: unknown): ReportCode {return codes.includes(value as ReportCode) ? value as ReportCode : 'other';}
@@ -8,7 +8,7 @@ export async function sendReport(kind: 'feedback' | 'diagnostic', message = '', 
   const client = createFirebaseSpikeClient();
   await client?.auth.authStateReady();
   const user = client?.auth.currentUser;
-  if (!client || !user || user.isAnonymous) throw new Error('Sign in with Google or contact support by email.');
+  if (!client || !user || user.isAnonymous) throw new Error('Your cloud session is unavailable. Your draft is preserved; use the email link below.');
   const id = crypto.randomUUID();
   const counter = doc(client.db, 'boxie', user.uid, 'supportState', kind);
   const report = doc(client.db, 'boxie', user.uid, 'supportReports', id);
