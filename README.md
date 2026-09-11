@@ -32,4 +32,4 @@ Open [Delete your Boxie account](https://boxie.dionlabs.ai/delete-account), also
 
 ## Website source
 
-The landing page and browser app are in [`website/`](website/). Cloudflare builds and deploys the website from `main`; see its README for local builds and configuration.
+The landing page and browser app are in [`website/`](website/). GitHub Actions builds and validates every push to `main`. Cloudflare automatic deployment is being connected; see the website README for local builds and configuration.
