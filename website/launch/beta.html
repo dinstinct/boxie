@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Join the Boxie Android beta</title><meta name="description" content="Become a founding Android tester for Boxie: your personal Outlook email, reimagined as calm conversations."><link rel="canonical" href="https://boxie.dionlabs.ai/beta"><meta name="theme-color" content="#08080b"><link rel="icon" href="/favicon.ico"><meta property="og:type" content="website"><meta property="og:url" content="https://boxie.dionlabs.ai/beta"><meta property="og:title" content="Join the Boxie Android beta"><meta property="og:description" content="Founding testers wanted: Android phone + personal Outlook account. Shape a calmer email app."><meta property="og:image" content="https://boxie.dionlabs.ai/brand/boxie-social.png"><link rel="stylesheet" href="/launch.css">
+<style>
+.beta-wrap{max-width:640px;margin:0 auto;padding:60px 24px 90px}
+.beta-wrap h1{font-size:clamp(40px,6vw,58px);margin:18px 0}
+.beta-wrap .intro{font-size:16px;max-width:none}
+.beta-card{background:#151318;border:1px solid #ffffff26;border-radius:20px;padding:34px 30px;margin-top:36px;box-shadow:0 25px 65px #00000040}
+.field{margin-bottom:26px}
+.field legend,.field label.q{display:block;font-weight:650;font-size:14px;margin-bottom:10px}
+.field .hint{display:block;font-size:12px;color:#b5aba8;margin-top:7px;line-height:1.6}
+.field input[type=email]{width:100%;background:#0e0d11;border:1px solid #ffffff26;border-radius:9px;color:#f4f1eb;padding:14px 15px;font-size:15px;font-family:inherit}
+.field input[type=email]:focus{outline:3px solid #f58b6b;outline-offset:2px;border-color:transparent}
+.choices{display:flex;gap:10px}
+.choices label{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;border:1px solid #ffffff26;border-radius:9px;padding:13px;cursor:pointer;font-size:14px}
+.choices input{accent-color:#f58b6b}
+.choices label:has(input:checked){border-color:#f58b6b;background:#342522}
+.commit{display:flex;gap:11px;align-items:flex-start;font-size:14px;line-height:1.6;cursor:pointer}
+.commit input{accent-color:#f58b6b;margin-top:4px;flex-shrink:0}
+.hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+.beta-card button{display:inline-flex;gap:30px;align-items:center;border:0;border-radius:9px;background:#f58b6b;color:#211410;padding:16px 21px;font-size:14px;font-weight:650;font-family:inherit;cursor:pointer}
+.beta-card button:hover{background:#ffa184}
+.beta-card button[disabled]{opacity:.55;cursor:wait}
+.form-error{color:#ff9d8a;font-size:13px;margin-top:14px}
+.result{display:none;text-align:center;padding:20px 6px}
+.result h2{font-size:34px;margin:14px 0}
+.result p{color:#b5aba8;font-size:14px}
+.result .button{margin-top:18px}
+.steps{text-align:left;max-width:430px;margin:24px auto 0;font-size:13px;color:#b5aba8}
+.steps li{margin-bottom:9px;line-height:1.6}
+.beta-note{max-width:640px;margin:0 auto;padding:0 24px 80px;font-size:12px;color:#b5aba8;line-height:1.8}
+</style></head>
+<body><a class="skip" href="#main">Skip to content</a><header><a class="wordmark" href="/"><img src="/brand/boxie-icon.png" alt="" width="44" height="44">Boxie</a><nav aria-label="Main"><a href="/#how">The idea</a><a href="/#privacy">Your privacy</a><a href="https://dionlabs.ai">A DionLabs project ↗</a></nav></header>
+<main id="main">
+<div class="beta-wrap">
+<p class="eyebrow"><span></span> Founding Android beta</p>
+<h1>Help shape a calmer <em>inbox.</em></h1>
+<p class="intro">Boxie turns your personal Outlook email into thoughtful chats instead of a wall of mail. The Android app is in its founding beta, and we're looking for a small group of testers who will actually use it for about two weeks and tell us what feels off. Your feedback goes straight into the next build.</p>
+
+<div class="beta-card">
+<form id="beta-form" novalidate>
+<div class="field">
+<label class="q" for="google_email">The email you use as the Google account on your Android phone</label>
+<input type="email" id="google_email" name="google_email" autocomplete="email" required placeholder="you@gmail.com">
+<span class="hint">This is the address Google Play uses for your beta invite. It must be the Google account signed in on the phone you'll test with - it's the most common setup mistake.</span>
+</div>
+<div class="field">
+<legend class="q">Is your daily phone an Android?</legend>
+<div class="choices">
+<label><input type="radio" name="android" value="yes" required> Yes</label>
+<label><input type="radio" name="android" value="no"> No</label>
+</div>
+</div>
+<div class="field">
+<legend class="q">Do you have a personal Outlook, Hotmail, or Live email account?</legend>
+<div class="choices">
+<label><input type="radio" name="outlook" value="yes" required> Yes</label>
+<label><input type="radio" name="outlook" value="no"> No</label>
+</div>
+<span class="hint">Boxie reads personal Microsoft accounts only for now - work/school accounts and Gmail aren't supported yet.</span>
+</div>
+<div class="field">
+<label class="commit"><input type="checkbox" name="commitment" value="yes" required> <span>I'll use Boxie most days for about two weeks and share at least one piece of honest feedback each week.</span></label>
+</div>
+<div class="hp" aria-hidden="true"><label>Website <input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
+<button type="submit">Apply for the beta <span>→</span></button>
+<p class="form-error" id="form-error" role="alert"></p>
+</form>
+
+<div class="result" id="result-ok">
+<img src="/brand/boxie-icon.png" width="56" height="56" alt="">
+<h2>You're in the queue.</h2>
+<p>We review applications in a daily batch. Once approved, you'll get an email at <strong id="ok-email"></strong> with your Play Store beta invite. Setup takes about five minutes:</p>
+<ol class="steps">
+<li>Open the invite link on your Android phone and opt in with the same Google account you applied with.</li>
+<li>Install Boxie from the Play Store listing.</li>
+<li>Sign in with your Boxie account (or create one on the web first), connect Outlook, and pair your phone.</li>
+</ol>
+</div>
+
+<div class="result" id="result-no">
+<img src="/brand/boxie-icon.png" width="56" height="56" alt="">
+<h2>Not this one - yet.</h2>
+<p id="no-reason">The Android beta needs an Android phone and a personal Outlook, Hotmail, or Live account.</p>
+<p>You can still use Boxie today on the web with a personal Outlook account - and we'd love your feedback there.</p>
+<a class="button" href="/app">Try Boxie on the web <span>→</span></a>
+</div>
+</div>
+</div>
+<p class="beta-note">Why we ask: Google requires new apps to run a closed test with real, engaged testers before public launch. We'd rather have twelve people who genuinely read email in Boxie than a hundred drive-by installs. Questions or problems? <a href="/feedback">Send feedback</a> or email <a href="mailto:support@dionlabs.ai">support@dionlabs.ai</a>.</p>
+</main>
+<footer><a href="https://dionlabs.ai">DionLabs ↗</a><span>Made with curiosity. Free to use.</span><a href="https://github.com/dion-labs/boxie">Downloads &amp; feedback ↗</a><a href="/privacy.html">Privacy</a><a href="/feedback">Feedback</a><a href="/delete-account">Delete account</a></footer>
+<script>
+(function(){
+  var form=document.getElementById('beta-form');
+  var err=document.getElementById('form-error');
+  form.addEventListener('submit',function(e){
+    e.preventDefault();
+    err.textContent='';
+    var email=form.google_email.value.trim();
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)){err.textContent='Enter the Google account email on your Android phone.';return;}
+    if(!form.android.value||!form.outlook.value){err.textContent='Answer the Android and Outlook questions so we know the beta can work for you.';return;}
+    if(!form.commitment.checked){err.textContent='The beta only works if testers can commit to using Boxie and sharing feedback.';return;}
+    var btn=form.querySelector('button');btn.disabled=true;
+    fetch('/api/beta/apply',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({
+      google_email:email,
+      android:form.android.value==='yes',
+      outlook:form.outlook.value==='yes',
+      commitment:form.commitment.checked,
+      website:form.website.value
+    })}).then(function(r){return r.json().catch(function(){return{};}).then(function(d){return{ok:r.ok,status:r.status,body:d};});})
+    .then(function(res){
+      form.style.display='none';
+      if(res.body.qualified){
+        document.getElementById('ok-email').textContent=email;
+        document.getElementById('result-ok').style.display='block';
+      }else{
+        if(res.body.reason==='android'){document.getElementById('no-reason').textContent='The Android beta needs an Android phone. Boxie on the web works on any device, and macOS distribution is being prepared.';}
+        if(res.body.reason==='outlook'){document.getElementById('no-reason').textContent="Boxie reads personal Outlook, Hotmail, and Live accounts for now - Gmail and work/school accounts aren't supported yet. If that changes, we'd love to have you.";}
+        document.getElementById('result-no').style.display='block';
+      }
+      window.scrollTo({top:0,behavior:'smooth'});
+    })
+    .catch(function(){btn.disabled=false;err.textContent='Something went wrong sending your application. Try again in a moment, or email support@dionlabs.ai.';});
+  });
+})();
+</script>
+</body></html>

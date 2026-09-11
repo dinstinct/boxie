@@ -1,6 +1,12 @@
+import {handleBetaRequest} from './beta.js';
+
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
+    // Founding Android beta intake and review live on the worker, not in static assets.
+    if (url.pathname === '/beta-admin' || url.pathname.startsWith('/api/beta/')) {
+      return handleBetaRequest(request, env, url);
+    }
     // Keep installed-client pairing links and the established OAuth return URL.
     const legacyApp = url.pathname === '/' && (['onboarding','browserMailbox','vaultSpike'].some(key => url.searchParams.get(key) === '1') || url.searchParams.has('conversation'));
     if (url.pathname === '/feedback' || url.pathname === '/delete-account' || legacyApp || url.pathname === '/app' || url.pathname === '/app/') {

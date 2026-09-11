@@ -32,6 +32,8 @@ Production client variables belong in Cloudflare, outside Git. The dashboard
 connection must be completed before automatic production deployment is active.
 Non-main branches must never deploy to production.
 
+The founding Android beta flow (`/beta`, application review, invite emails) is documented in `BETA.md`.
+
 The rest of the public repository contains downloads and support information.
 Private research history, local mailbox data, credentials and native signing
 material are not part of this website source.

@@ -4,6 +4,8 @@
   "main": "cloudflare/worker.js",
   "workers_dev": true,
   "compatibility_date": "2026-09-05",
-  "assets": {"directory": "./dist/web", "binding": "ASSETS", "run_worker_first": ["/", "/app", "/app/", "/delete-account", "/feedback"]},
+  "assets": {"directory": "./dist/web", "binding": "ASSETS", "run_worker_first": ["/", "/app", "/app/", "/delete-account", "/feedback", "/beta-admin", "/api/beta/*"]},
+  "d1_databases": [{"binding": "DB", "database_name": "boxie-beta", "database_id": "REPLACE_WITH_WRANGLER_D1_CREATE_OUTPUT"}],
+  "vars": {"BETA_NOTIFY_EMAIL": "support@dionlabs.ai", "BETA_FROM_EMAIL": "boxie@dionlabs.ai"},
   "routes": [{"pattern": "boxie.dionlabs.ai", "custom_domain": true}]
 }

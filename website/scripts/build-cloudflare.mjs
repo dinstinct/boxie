@@ -6,3 +6,4 @@ await copyFile('dist/web/index.html', 'dist/web/app/index.html');
 await copyFile('launch/index.html', 'dist/web/index.html');
 await copyFile('launch/launch.css', 'dist/web/launch.css');
 await cp('launch/privacy.html', 'dist/web/privacy.html');
+await copyFile('launch/beta.html', 'dist/web/beta.html');
