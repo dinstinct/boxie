@@ -28,8 +28,8 @@ Cloudflare Workers Builds deployment configuration targets this directory (`webs
 `dion-labs/boxie`. Production uses Worker `boxie` and the existing custom domain.
 Build command: `pnpm typecheck && pnpm test && pnpm build`.
 Deploy command: `pnpm exec wrangler deploy`.
-Production client variables belong in Cloudflare, outside Git. The dashboard
-connection must be completed before automatic production deployment is active.
+Production client variables are configured in Cloudflare, outside Git.
+The GitHub connection deploys main pushes; non-production builds are disabled.
 Non-main branches must never deploy to production.
 
 The rest of the public repository contains downloads and support information.
