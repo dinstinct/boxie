@@ -22,10 +22,14 @@ Send [private feedback](https://boxie.dionlabs.ai/feedback) or email support@dio
 
 Read the [privacy details](https://boxie.dionlabs.ai/privacy.html). Do not post email contents, credentials, pairing secrets, or personal account details in issues. Use issues for reproducible, non-sensitive bugs only.
 
-This is Boxie’s public distribution and support repository. The development research journal is not published here. Free to use does not imply an open-source license for unpublished implementation code.
+This is Boxie’s public distribution, website source and support repository. The development research journal is not published here. Free to use does not imply an open-source license for unpublished implementation code.
 
-Google Play distribution is being prepared. The current download is a signed APK, not a live Play Store listing.
+Google Play internal testing is active for selected testers. The public download remains the signed APK; a production Play Store listing is not yet available.
 
 ## Account deletion
 
 Open [Delete your Boxie account](https://boxie.dionlabs.ai/delete-account), also available in Android Settings. Requests are processed manually by DionLabs, normally within seven days. See the page for device cleanup and retained-record details. Support: support@dionlabs.ai.
+
+## Website source
+
+The landing page and browser app are in [`website/`](website/). Cloudflare builds and deploys the website from `main`; see its README for local builds and configuration.

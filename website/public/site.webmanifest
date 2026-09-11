@@ -1,0 +1,23 @@
+{
+  "name": "Boxie",
+  "short_name": "Boxie",
+  "description": "A calm, chat-like interface over personal email.",
+  "start_url": "/app",
+  "display": "standalone",
+  "background_color": "#f7f0e4",
+  "theme_color": "#ed6448",
+  "icons": [
+    {
+      "src": "/brand/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/brand/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "id": "/",
+  "scope": "/"
+}

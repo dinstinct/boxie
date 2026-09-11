@@ -1,0 +1,94 @@
+.onboarding-shell { min-height: 100dvh; overflow: auto; background: radial-gradient(circle at 50% -20%, rgba(152, 105, 231, 0.2), transparent 43%), radial-gradient(circle at 90% 90%, rgba(237, 106, 86, 0.08), transparent 32%), #101116; color: #f3f1f7; padding: 0 20px 60px; }
+.onboarding-header { display: flex; max-width: 980px; height: 72px; align-items: center; justify-content: space-between; margin: 0 auto; }
+.onboarding-header a { display: inline-flex; align-items: center; gap: 9px; color: #f5f2f8; text-decoration: none; }
+.onboarding-header img { width: 36px; height: 36px; border: 1px solid rgba(183, 145, 250, 0.35); border-radius: 11px; background: #28232f; }
+.onboarding-header strong { font-size: 15px; letter-spacing: -0.03em; }
+.onboarding-header > span { border: 1px solid #33313b; border-radius: 999px; padding: 5px 9px; color: #9993a2; font-size: 9px; font-weight: 750; text-transform: uppercase; }
+.onboarding-progress { display: grid; max-width: 620px; grid-template-columns: repeat(5, 1fr); margin: 22px auto 26px; }
+.onboarding-progress > div { position: relative; display: grid; justify-items: center; gap: 7px; color: #625e69; }
+.onboarding-progress > div::before { position: absolute; top: 13px; right: 50%; left: -50%; height: 1px; background: #302e36; content: ""; }
+.onboarding-progress > div:first-child::before { display: none; }
+.onboarding-progress span { z-index: 1; display: grid; width: 27px; height: 27px; place-items: center; border: 1px solid #34313b; border-radius: 50%; background: #17171d; font-size: 9px; font-weight: 850; }
+.onboarding-progress svg { width: 12px; height: 12px; }
+.onboarding-progress small { font-size: 8.5px; font-weight: 700; }
+.onboarding-progress .is-current { color: #d5c2fb; }
+.onboarding-progress .is-current span { border-color: #9c78e5; background: #34264f; box-shadow: 0 0 0 5px rgba(151, 111, 225, 0.08); }
+.onboarding-progress .is-complete { color: #86c8ad; }
+.onboarding-progress .is-complete::before { background: #4e7c6a; }
+.onboarding-progress .is-complete span { border-color: #609b83; background: #223c32; }
+.onboarding-card { position: relative; width: min(100%, 680px); min-height: 470px; margin: 0 auto; border: 1px solid #302d39; border-radius: 24px; background: linear-gradient(145deg, rgba(255,255,255,0.03), transparent 46%), rgba(25,24,31,0.96); padding: clamp(28px, 5vw, 50px); box-shadow: 0 30px 90px rgba(0,0,0,0.34); }
+.onboarding-card h1 { max-width: 560px; margin: 8px 0 12px; font-size: clamp(27px, 5vw, 40px); line-height: 1.04; letter-spacing: -0.052em; }
+.onboarding-card > p { max-width: 570px; margin: 0 0 24px; color: #a19baa; font-size: 13px; line-height: 1.68; }
+.onboarding-card code { color: #cdbaf2; font: 0.94em ui-monospace, SFMono-Regular, monospace; }
+.onboarding-kicker { color: #b79aee; font-size: 9px; font-weight: 850; letter-spacing: 0.14em; text-transform: uppercase; }
+.onboarding-hero-art { display: grid; width: 92px; height: 92px; place-items: center; margin-bottom: 23px; border: 1px solid rgba(186,150,250,0.28); border-radius: 25px; background: radial-gradient(circle at 50% 15%, #4b386e, #25202d); box-shadow: 0 20px 46px rgba(79,47,133,0.26); }
+.onboarding-hero-art img { width: 84px; height: 84px; object-fit: contain; }
+.onboarding-icon, .onboarding-check { display: grid; width: 52px; height: 52px; place-items: center; margin-bottom: 22px; border: 1px solid rgba(177,140,244,0.3); border-radius: 16px; background: rgba(138,95,211,0.12); color: #bea2ef; }
+.onboarding-icon svg { width: 24px; height: 24px; }
+.onboarding-icon-warning { border-color: rgba(231,163,84,0.3); background: rgba(180,113,44,0.11); color: #e4ad6e; }
+.onboarding-check { border-color: rgba(104,190,153,0.34); background: rgba(62,142,108,0.13); color: #8bd0b3; }
+.onboarding-check svg { width: 25px; height: 25px; stroke-width: 2.4; }
+.onboarding-check-large { width: 66px; height: 66px; border-radius: 50%; }
+.onboarding-promises { display: grid; gap: 10px; margin: 0 0 28px; padding: 0; list-style: none; }
+.onboarding-promises li, .onboarding-account-proof, .onboarding-next-boundary { display: flex; align-items: center; gap: 12px; border: 1px solid #302e38; border-radius: 13px; background: #17171d; padding: 12px 14px; }
+.onboarding-promises svg, .onboarding-account-proof > svg, .onboarding-next-boundary > svg { width: 18px; height: 18px; flex: 0 0 auto; color: #aa8cde; }
+.onboarding-promises span, .onboarding-account-proof span, .onboarding-next-boundary span { display: grid; gap: 3px; }
+.onboarding-promises strong, .onboarding-account-proof strong, .onboarding-next-boundary strong { font-size: 11px; }
+.onboarding-promises small, .onboarding-account-proof small, .onboarding-next-boundary small { color: #817c88; font-size: 9.5px; line-height: 1.4; }
+.onboarding-account-proof, .onboarding-next-boundary { margin: 20px 0; }
+.onboarding-next-boundary { border-color: rgba(130,101,190,0.32); background: rgba(104,73,160,0.08); }
+.onboarding-sync-summary { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 9px; margin: 22px 0; }
+.onboarding-sync-summary > div { display: flex; min-width: 0; align-items: center; gap: 10px; border: 1px solid #302e38; border-radius: 13px; background: #17171d; padding: 12px; }
+.onboarding-sync-summary svg { width: 17px; height: 17px; flex: 0 0 auto; color: #aa8cde; }
+.onboarding-sync-summary span { display: grid; min-width: 0; gap: 3px; }
+.onboarding-sync-summary strong { overflow: hidden; font-size: 10.5px; text-overflow: ellipsis; white-space: nowrap; }
+.onboarding-sync-summary small { color: #817c88; font-size: 8.5px; line-height: 1.35; }
+.onboarding-primary, .onboarding-secondary { display: inline-flex; min-height: 44px; align-items: center; justify-content: center; gap: 8px; border: 1px solid #9e7be0; border-radius: 11px; background: linear-gradient(180deg, #9574d9, #7656b7); padding: 0 16px; color: white; box-shadow: 0 9px 25px rgba(103,71,169,0.24); font-size: 11px; font-weight: 800; text-decoration: none; cursor: pointer; }
+.onboarding-primary:hover:not(:disabled) { border-color: #c2a6f3; background: linear-gradient(180deg, #a280e3, #805fc1); }
+.onboarding-primary:disabled { cursor: not-allowed; opacity: 0.5; }
+.onboarding-primary svg, .onboarding-secondary svg { width: 15px; height: 15px; }
+.onboarding-secondary { border-color: #3c3944; background: #24232b; box-shadow: none; color: #c5c0ca; }
+.onboarding-secondary:hover { border-color: #5b5466; color: white; }
+.onboarding-actions { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px; margin-top: 25px; }
+.outlook-confirmation { display: grid; grid-template-columns: auto minmax(0,1fr) auto; align-items: center; gap: 13px; margin: 23px 0; border: 1px solid rgba(118,166,219,0.3); border-radius: 16px; background: linear-gradient(145deg, rgba(69,126,190,0.1), transparent), #17191e; padding: 16px; }
+.outlook-avatar { display: grid; width: 46px; height: 46px; place-items: center; border-radius: 13px; background: linear-gradient(145deg, #3b8bd5, #1c5998); color: white; font-size: 17px; font-weight: 850; }
+.outlook-confirmation span { display: grid; min-width: 0; gap: 4px; }
+.outlook-confirmation strong, .outlook-confirmation small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.outlook-confirmation strong { font-size: 13px; }
+.outlook-confirmation small { color: #8f98a5; font-size: 10px; }
+.outlook-confirmation > svg { width: 20px; color: #83c5aa; }
+.onboarding-error { margin-bottom: 18px; border: 1px solid rgba(221,104,91,0.35); border-radius: 11px; background: rgba(126,50,44,0.14); padding: 10px 12px; color: #e6a39b; font-size: 10.5px; line-height: 1.5; }
+.onboarding-config-note { display: grid; gap: 7px; margin-top: 20px; border: 1px solid rgba(211,155,83,0.28); border-radius: 12px; background: rgba(133,89,33,0.1); padding: 13px; }
+.onboarding-config-note strong { color: #dbb17c; font-size: 10px; }
+.onboarding-config-note small { color: #877c70; font-size: 9px; }
+.onboarding-loading { display: flex; min-height: 350px; flex-direction: column; align-items: center; justify-content: center; gap: 10px; color: #aaa2b4; text-align: center; }
+.onboarding-loading svg { width: 28px; height: 28px; color: #ac8ce5; }
+.onboarding-loading strong { font-size: 14px; }
+.onboarding-loading small { color: #716b78; font-size: 9px; }
+.onboarding-busy { position: fixed; right: 22px; bottom: 22px; display: inline-flex; align-items: center; gap: 8px; border: 1px solid #3b3745; border-radius: 11px; background: rgba(31,29,37,0.96); padding: 10px 12px; color: #c4bdcc; box-shadow: 0 12px 36px rgba(0,0,0,0.34); font-size: 10px; }
+.onboarding-busy svg { width: 15px; height: 15px; color: #b394eb; }
+.onboarding-signout { display: block; margin: 18px auto 0; border: 0; background: transparent; color: #746f7b; font-size: 9.5px; cursor: pointer; }
+.onboarding-signout:hover { color: #aaa3b0; }
+@media (max-width: 620px) {
+  .onboarding-shell { padding: 0 12px 32px; }
+  .onboarding-header { height: 61px; }
+  .onboarding-progress { margin: 14px auto 20px; }
+  .onboarding-progress small { display: none; }
+  .onboarding-card { min-height: 0; border-radius: 18px; padding: 27px 20px; }
+  .onboarding-card h1 { font-size: 29px; }
+  .onboarding-actions { display: grid; }
+  .onboarding-actions > * { width: 100%; }
+  .onboarding-sync-summary { grid-template-columns: 1fr; }
+  .onboarding-busy { right: 12px; bottom: 12px; left: 12px; justify-content: center; }
+}
+@media (min-width: 621px) and (max-height: 800px) {
+  .onboarding-header { height: 56px; }
+  .onboarding-progress { margin: 9px auto 15px; }
+  .onboarding-card { min-height: 0; padding: 29px 42px; }
+  .onboarding-card h1 { font-size: 34px; }
+  .onboarding-card > p { margin-bottom: 17px; line-height: 1.55; }
+  .onboarding-hero-art { width: 72px; height: 72px; margin-bottom: 14px; border-radius: 20px; }
+  .onboarding-hero-art img { width: 66px; height: 66px; }
+  .onboarding-promises { gap: 7px; margin-bottom: 18px; }
+  .onboarding-promises li { padding: 9px 12px; }
+}

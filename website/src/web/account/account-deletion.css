@@ -1,0 +1,10 @@
+.account-deletion { height: 100dvh; overflow-y: auto; padding: 32px 20px 64px; }
+.account-deletion article { max-width: 720px; margin: 0 auto; line-height: 1.65; }
+.account-deletion h1 { font-size: clamp(28px, 5vw, 40px); line-height: 1.15; letter-spacing: -.035em; margin: 28px 0; }
+.account-deletion a { color: #ffad98; }
+.account-deletion p { color: #c9c6c4; }
+.account-deletion strong { color: #f6f3ef; }
+.account-deletion button { border: 1px solid #57504c; background: #302622; border-radius: 10px; padding: 12px 16px; cursor: pointer; }
+.account-deletion button:disabled { opacity: .5; cursor: default; }
+.account-deletion input { display: block; margin-top: 8px; max-width: 100%; border: 1px solid #66605c; border-radius: 8px; padding: 10px; background: #202024; color: #fff; }
+.account-deletion [role=alert], .account-deletion [role=status] { border: 1px solid #65534a; border-radius: 12px; padding: 16px; }

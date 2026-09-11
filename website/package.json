@@ -1,0 +1,41 @@
+{
+  "name": "boxie-website",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22.12"
+  },
+  "scripts": {
+    "build": "node scripts/check-build-env.mjs && vite build && node scripts/build-cloudflare.mjs",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit -p tsconfig.web.json",
+    "deploy": "wrangler deploy"
+  },
+  "dependencies": {
+    "@azure/msal-browser": "5.20.0",
+    "@zxing/browser": "0.2.1",
+    "dompurify": "3.4.14",
+    "firebase": "12.18.0",
+    "idb": "8.0.3",
+    "lucide-react": "1.35.0",
+    "qrcode": "1.5.4",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "zod": "4.5.2"
+  },
+  "devDependencies": {
+    "@types/node": "24.10.1",
+    "@types/qrcode": "1.5.6",
+    "@types/react": "19.2.7",
+    "@types/react-dom": "19.2.3",
+    "@vitejs/plugin-react": "6.1.1",
+    "fake-indexeddb": "6.2.5",
+    "jsdom": "30.0.1",
+    "typescript": "5.9.3",
+    "vite": "8.2.2",
+    "vitest": "4.1.11",
+    "wrangler": "4.130.0"
+  },
+  "packageManager": "pnpm@11.19.0"
+}
