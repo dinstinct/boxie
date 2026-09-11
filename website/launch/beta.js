@@ -1,12 +1,22 @@
 const form = document.querySelector('#beta-form');
 const error = document.querySelector('#form-error');
-const withdrawalToken = new URLSearchParams(location.hash.slice(1)).get('withdraw');
-if (withdrawalToken) {
-  // Remove the capability from the visible URL; never put it in a request URL.
-  history.replaceState(null,'',location.pathname);
+let withdrawalToken = null;
+function consumeWithdrawalLink() {
+  const nextToken = new URLSearchParams(location.hash.slice(1)).get('withdraw');
+  if (!nextToken) return;
+  // Handle both initial loads and same-document navigation. Never send the capability in a URL.
+  history.replaceState(null,'',location.pathname + location.search);
+  withdrawalToken = nextToken;
   document.querySelector('#intake').hidden = true;
   document.querySelector('#withdraw').hidden = false;
+  const button = document.querySelector('#withdraw-button');
+  button.hidden = false;
+  button.disabled = false;
+  document.querySelector('#withdraw-result').textContent = '';
+  button.focus();
 }
+window.addEventListener('hashchange', consumeWithdrawalLink);
+consumeWithdrawalLink();
 async function post(path, data) {
   const response = await fetch(path, {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
   const result = await response.json().catch(()=>({}));
@@ -35,9 +45,14 @@ document.querySelector('#withdrawal-link').addEventListener('click',event=>event
 document.querySelector('#withdraw-button').addEventListener('click',async event => {
   event.target.disabled = true;
   const result = document.querySelector('#withdraw-result');
+  const submittedToken = withdrawalToken;
   try {
-    await post('/api/beta/withdraw',{token:withdrawalToken});
+    await post('/api/beta/withdraw',{token:submittedToken});
+    if (withdrawalToken !== submittedToken) return;
     result.textContent = 'Any application associated with this link has been removed. No further action is needed.';
     event.target.hidden = true;
-  } catch (failure) { result.textContent = failure.message; event.target.disabled = false; }
+  } catch (failure) {
+    if (withdrawalToken !== submittedToken) return;
+    result.textContent = failure.message; event.target.disabled = false;
+  }
 });
