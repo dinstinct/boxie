@@ -41,3 +41,13 @@ The private development checkout can export its reviewed browser source using
 GitHub website edits back into that checkout before its next export; do not
 blindly overwrite changes made here. `.source-manifest.json` lists the exact
 exported file set.
+
+## Android tester intake
+
+`/beta` accepts interest before closed-track installation access is ready. Credit to @dinstinct and [PR #1](https://github.com/dion-labs/boxie/pull/1) for the screening concept; the implementation was independently rewritten. No automatic email or public admin API is included.
+
+Apply `cloudflare/migrations` to the dedicated `BETA_DB` before deployment, and configure `BETA_RATE_SECRET` through Worker secrets. `BETA_ENABLED=false` pauses intake without disabling withdrawal or daily expiry cleanup. Do not put this secret in browser variables or commit it. The D1 database was created with EU jurisdiction.
+
+Owner review uses `node scripts/beta-review.mjs count` or `list` with existing Cloudflare access. `contacted ID` and `declined ID` set review status only; `delete ID` handles verified withdrawals and `purge` removes expired records. Keep list output private. These commands never send messages or grant Play access. A submitted email is unverified; confirm ownership before acting on support requests or arranging access.
+
+Applications expire after 30 days and are removed daily. Do not create independent exports or backups without updating the retention process. After disaster recovery, reconcile withdrawals and purge expired records before reopening collection. Read the intake privacy notice before changing data handling.
