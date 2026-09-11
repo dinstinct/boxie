@@ -2,6 +2,7 @@
   ".env.example",
   ".gitignore",
   "cloudflare/beta.js",
+  "cloudflare/beta.test.js",
   "cloudflare/migrations/0001_beta.sql",
   "cloudflare/worker.js",
   "index.html",
