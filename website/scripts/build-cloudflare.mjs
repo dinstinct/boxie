@@ -6,3 +6,7 @@ await copyFile('dist/web/index.html', 'dist/web/app/index.html');
 await copyFile('launch/index.html', 'dist/web/index.html');
 await copyFile('launch/launch.css', 'dist/web/launch.css');
 await cp('launch/privacy.html', 'dist/web/privacy.html');
+
+for (const file of ['beta.css','beta.js']) await copyFile(`launch/${file}`, `dist/web/${file}`);
+await mkdir('dist/web/beta', {recursive:true});
+await copyFile('launch/beta.html', 'dist/web/beta/index.html');
