@@ -15,7 +15,7 @@ export default {
       return response;
     }
     // Keep installed-client pairing links and the established OAuth return URL.
-    const legacyApp = url.pathname === '/' && (['onboarding','browserMailbox','vaultSpike'].some(key => url.searchParams.get(key) === '1') || url.searchParams.has('conversation'));
+    const legacyApp = url.pathname === '/' && (['onboarding','browserMailbox','vaultSpike','cloudVault','cloudMailbox'].some(key => url.searchParams.get(key) === '1') || url.searchParams.has('conversation'));
     if (url.pathname === '/feedback' || url.pathname === '/delete-account' || legacyApp || url.pathname === '/app' || url.pathname === '/app/') {
       url.pathname = '/app/';
       return env.ASSETS.fetch(new Request(url, request));

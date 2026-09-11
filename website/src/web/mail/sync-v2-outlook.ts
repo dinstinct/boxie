@@ -1,3 +1,4 @@
+import {VaultConsolidation, mergeImportedMessages} from './vault-consolidation';
 import {canonical} from "../../contracts/sync/protocol";
 import {isRemovedMessage, type GraphDeltaPage, type GraphMessage, type OutlookFolderKind} from "../../server/providers/outlook/types";
 import {deriveOpaqueObjectId} from "../vault-spike/crypto";
@@ -7,7 +8,7 @@ import {SyncedIngestion} from "./sync-v2-ingestion";
 import {SyncLeaseBusy, type SyncV2Store, type IngestionLease} from "./sync-v2-store";
 
 type Vault = {vaultId: string; epoch: number; vaultKey: Uint8Array; deviceId: string};
-export interface FolderCheckpoint {url: string; complete: boolean; reset: boolean; seen: string[]; pages: number; items: number}
+export interface FolderCheckpoint {activatedAt?: string; url: string; complete: boolean; reset: boolean; seen: string[]; pages: number; items: number}
 const membership = (m: BrowserCanonicalMessage) => `${m.accountScopeId}\0${m.folderKind}\0${m.providerMessageId}`;
 /** Frozen v1 records are retained as the baseline. V2 folder memberships override
  * that baseline, including tombstones. Pulls only change this read projection. */
@@ -43,9 +44,15 @@ export function normalizeSource(mailbox: BrowserCanonicalMailbox, folder: Outloo
 }
 export class SyncedOutlook {
   private readonly ingestion: SyncedIngestion;
+  private readonly consolidation: VaultConsolidation;
   private readonly cache = new Map<string, {revision: string; value: BrowserCanonicalMessage}>();
-  constructor(private readonly store: SyncV2Store, private readonly vault: Vault) {this.ingestion = new SyncedIngestion(store, {...vault, deviceId: crypto.randomUUID()});}
+  constructor(private readonly store: SyncV2Store, private readonly vault: Vault) {this.ingestion = new SyncedIngestion(store, {...vault, deviceId: crypto.randomUUID()}); this.consolidation = new VaultConsolidation(store, vault);}
   private id(namespace: string, logicalId: string) {return deriveOpaqueObjectId({vaultKey: this.vault.vaultKey, namespace, logicalId});}
+  async effectiveMailbox(mailbox: BrowserCanonicalMailbox): Promise<BrowserCanonicalMailbox> {
+    const imports = await this.consolidation.load(mailbox);
+    return {...mailbox, consolidationBaselineActivatedAt: mailbox.consolidationBaselineActivatedAt ?? mailbox.activatedAt, activatedAt: [mailbox.activatedAt, ...imports.map(i => i.mailbox.activatedAt)].sort((a,b) => Date.parse(a)-Date.parse(b))[0]!,
+      conversationPreferences: Object.assign({}, ...imports.slice().reverse().map(i => i.mailbox.conversationPreferences), mailbox.conversationPreferences)};
+  }
   async memberships(mailbox: BrowserCanonicalMailbox, baseline: BrowserCanonicalMessage[], renew?: () => Promise<void>): Promise<BrowserCanonicalMessage[]> {
     const values = new Map(baseline.filter(m => m.accountScopeId === mailbox.accountScopeId).map(m => [membership(m), m]));
     const streams = await Promise.all((["inbox", "sent_items"] as const).map(folder => this.id("sync-v2-stream", `${mailbox.providerAccountId}\0${folder}`)));
@@ -64,9 +71,11 @@ export class SyncedOutlook {
       }
       values.set(membership(cached.value), cached.value);
     }
-    return [...values.values()];
+    const imports = await this.consolidation.load(mailbox);
+    return mergeImportedMessages([...values.values()], imports.flatMap(i => i.messages), mailbox.consolidationBaselineActivatedAt ?? mailbox.activatedAt);
   }
   async sync(mailbox: BrowserCanonicalMailbox, baseline: BrowserCanonicalMessage[], graph: {getDeltaPage(url: string): Promise<GraphDeltaPage>; getMessage?(id: string, folder: OutlookFolderKind, metadataOnly?: boolean): Promise<GraphMessage>}): Promise<void> {
+    mailbox = await this.effectiveMailbox(mailbox);
     if (!Number.isFinite(Date.parse(mailbox.activatedAt)) || mailbox.provider !== "outlook" || mailbox.informationSpace !== "personal") throw new Error("Invalid personal Outlook boundary");
     for (const folder of ["inbox", "sent_items"] as const) {
       const stream = await this.id("sync-v2-stream", `${mailbox.providerAccountId}\0${folder}`);
@@ -74,7 +83,7 @@ export class SyncedOutlook {
       // If anything changed, reacquire and reload the durable cursor before applying it.
       const probe = await this.ingestion.checkpoint(stream, stream);
       const checkpoint = probe.value as FolderCheckpoint | null;
-      if (checkpoint?.complete && !checkpoint.reset) {
+      if (checkpoint?.complete && !checkpoint.reset && checkpoint.activatedAt === mailbox.activatedAt) {
         try {
           const page = await graph.getDeltaPage(checkpoint.url);
           if (page.value.length === 0 && page["@odata.deltaLink"] && !page["@odata.nextLink"]) continue;
@@ -83,7 +92,7 @@ export class SyncedOutlook {
       let lease: IngestionLease;
       try {lease = await this.ingestion.acquire(stream);} catch (error) {if (error instanceof SyncLeaseBusy) continue; throw error;}
       let saved = await this.ingestion.checkpoint(stream, stream);
-      let state: FolderCheckpoint = saved.value ? saved.value as FolderCheckpoint : {url: buildBrowserInitialDeltaUrl(folder, mailbox.activatedAt), complete: false, reset: true, seen: [], pages: 0, items: 0};
+      let state: FolderCheckpoint = saved.value && (saved.value as FolderCheckpoint).activatedAt === mailbox.activatedAt ? saved.value as FolderCheckpoint : {url: buildBrowserInitialDeltaUrl(folder, mailbox.activatedAt), complete: false, reset: true, seen: [], pages: 0, items: 0};
       if (state.complete) state = {...state, pages: 0, items: 0};
       const records = new Map((await this.memberships(mailbox, baseline, async () => {lease = await this.store.renew(lease);})).filter(m => m.folderKind === folder).map(m => [m.providerMessageId, m]));
       let resetAttempted = false;
@@ -116,9 +125,9 @@ export class SyncedOutlook {
           if (value) {records.set(item.id, value); changes.set(item.id, value);}
         }
         if (state.reset && delta) for (const [id, value] of records) {
-          if (!seen.has(id) && !value.providerRemovedAt) changes.set(id, {...value, providerRemovedAt: now, providerRemovedReason: "absent_after_reset", updatedAt: now});
+          if (!seen.has(id) && !value.providerRemovedAt) changes.set(id, {...value, providerRemovedAt: now, providerRemovedReason: "absent_after_reset", providerResetActivatedAt: mailbox.activatedAt, updatedAt: now});
         }
-        const checkpoint: FolderCheckpoint = {url: next ?? delta!, complete: Boolean(delta), reset: Boolean(next) && state.reset,
+        const checkpoint: FolderCheckpoint = {activatedAt: mailbox.activatedAt, url: next ?? delta!, complete: Boolean(delta), reset: Boolean(next) && state.reset,
           seen: next && state.reset ? [...seen].sort() : [], pages: state.pages + 1, items: state.items + page.value.length};
         const sources = await Promise.all([...changes].map(async ([id, value]) => ({objectId: await this.id("sync-v2-source", `${stream}\0${id}`), value})));
         const result = await this.ingestion.publishPage({lease, checkpointId: stream, expectedCheckpoint: saved.revision, sources, checkpoint});

@@ -128,3 +128,8 @@ export async function loadPendingPairing(
 export async function deletePendingPairing(uid: string, pairingId: string): Promise<void> {
   await (await databasePromise).delete("pairings", pairingKey(uid, pairingId));
 }
+
+/** Device-local discovery only; no cloud authentication or writes. */
+export async function hasSavedCloudVault(): Promise<boolean> {
+  return (await (await databasePromise).getAllKeys("vaults")).some(uid => !uid.startsWith("local-outlook-"));
+}

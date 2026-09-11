@@ -28,7 +28,7 @@ type RuntimeState =
   | { kind: "setup"; message: string }
   | { kind: "error"; message: string };
 
-export function BrowserMailboxApp() {
+export function CloudMailboxApp() {
   const firebase = useMemo(() => onboardingFirebaseClient(), []);
   const [user, setUser] = useState<User | null | undefined>(undefined);
   const [runtime, setRuntime] = useState<RuntimeState>({
@@ -149,10 +149,12 @@ export function BrowserMailboxApp() {
             <span className="onboarding-kicker">Setup needed</span>
             <h1>Your encrypted mailbox is not ready here yet.</h1>
             <p>{runtime.message}</p>
-            <a className="onboarding-primary" href="/?onboarding=1">Open private setup</a>
+            <a className="onboarding-primary" href="/?cloudVault=1">Open private setup</a>
           </>
         )}
       </section>
     </main>
   );
 }
+
+export {LocalMailboxApp as BrowserMailboxApp} from "../onboarding/LocalMailboxApp";

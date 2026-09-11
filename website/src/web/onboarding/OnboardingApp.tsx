@@ -1,3 +1,5 @@
+import {localMailboxSnapshot, selectConsolidatedCloud} from './local-mailbox';
+import {VaultConsolidation} from '../mail/vault-consolidation';
 import {reportFailure} from '../support/reporting';
 import {initializeFirstMailbox} from "./initialize-sync";
 import {SyncV2Store} from "../mail/sync-v2-store";
@@ -116,7 +118,7 @@ export function OnboardingApp() {
   }, [firebase]);
 
   useEffect(() => {
-    if (!firebase || !user) {
+    if (!started || !firebase || !user) {
       return;
     }
     let active = true;
@@ -132,7 +134,7 @@ export function OnboardingApp() {
       })
       .finally(() => { if (active) setBusy(null); });
     return () => { active = false; };
-  }, [firebase, user, vaultRetry]);
+  }, [started, firebase, user, vaultRetry]);
 
   useEffect(() => {
     if (vault?.kind !== "ready" || outlook || !hasPendingOutlookRedirect()) {
@@ -173,6 +175,7 @@ export function OnboardingApp() {
     setError(null);
     try {
       setBusy("Preparing encrypted mail storage");
+      const localSnapshot = await localMailboxSnapshot(outlook);
       const vaultKey = await readLocalVaultKey(readyVault.local);
       const localRepository = new IndexedDbEncryptedCanonicalRepository(
         readyVault.local.uid,
@@ -210,7 +213,7 @@ export function OnboardingApp() {
           if ((await Promise.all(existing.map(mailbox => store.listMessages(mailbox)))).some(messages => messages.length > 0)) {
             throw new Error("Existing mail needs an explicit migration, not first-device setup.");
           }
-          await store.activateOutlookAccount({providerAccountId: outlook.homeAccountId, emailAddress: outlook.username, activatedAt: new Date().toISOString()});
+          await store.activateOutlookAccount({providerAccountId: outlook.homeAccountId, emailAddress: outlook.username, activatedAt: localSnapshot?.mailbox.activatedAt ?? new Date().toISOString()});
           const replication = await new CanonicalCloudReplicator(localRepository, cloudRepository).drain();
           if (replication.remaining !== 0) throw new Error("Encrypted identity backup did not finish. Retry setup.");
         }, verifyBaseline});
@@ -220,6 +223,10 @@ export function OnboardingApp() {
         const recovery = await recoverRepresentedLegacyQueue({queue: localRepository, cloud: cloudRepository, vault: {...syncVault, uid: readyVault.local.uid}});
         if (recovery.remaining) throw new Error("Older local changes remain preserved and need review before sync can continue.");
       }
+      if (localSnapshot) {
+        setBusy("Consolidating this device’s encrypted inbox");
+        await new VaultConsolidation(sync, syncVault).publish(localSnapshot, {vaultId: localSnapshot.local.vaultId, vaultKey: localSnapshot.vaultKey}, mailbox);
+      }
       setBusy("Syncing new mail with your encrypted vault");
       const source = new SyncedOutlook(sync, syncVault);
       const baseline = await store.listMessages(mailbox);
@@ -227,6 +234,7 @@ export function OnboardingApp() {
       const messages = mergeSourceMemberships(baseline, await source.memberships(mailbox, baseline));
       const results: BrowserOutlookSyncResult[] = [];
       if (readyVault.local.uid !== accountUidRef.current) return;
+      await selectConsolidatedCloud(outlook, readyVault.local.uid);
       setInitialSync({
         activatedAt: mailbox.activatedAt,
         activeMessageCount: messages.filter((message) => !message.providerRemovedAt).length,
@@ -256,7 +264,7 @@ export function OnboardingApp() {
       <a href="/feedback" style={{position:"fixed",right:20,bottom:16,zIndex:10}}>Feedback / report a problem</a>
       <header className="onboarding-header">
         <a href="/" aria-label="Return to Boxie"><img src="/brand/boxie-icon.png" alt="" /><strong>Boxie</strong></a>
-        <span>Private setup</span>
+        <a href="/app">Back to inbox</a>
       </header>
 
       <div className="onboarding-progress" aria-label={`Setup step ${currentStep + 1} of 5`}>
@@ -273,15 +281,15 @@ export function OnboardingApp() {
 
         {!started && <>
           <div className="onboarding-hero-art"><img src="/brand/boxie-avatar.png" alt="Boxie" /></div>
-          <span className="onboarding-kicker">Email, without the inbox feeling</span>
-          <h1>Let’s turn Outlook into conversations.</h1>
-          <p>Boxie keeps Outlook as the source of truth, stores mail on your device, and uploads only end-to-end encrypted replicas.</p>
+          <span className="onboarding-kicker">Optional cloud vault</span>
+          <h1>Connect your devices.</h1>
+          <p>This separate setup enables encrypted cloud storage and device pairing. Existing vault owners must use their original Google account. This device’s local inbox is imported after the exact Outlook account is verified. Existing shared organization wins conflicts; your original local copy is retained.</p>
           <ul className="onboarding-promises">
             <li><Mail /><span><strong>Read-only Outlook</strong><small>Boxie cannot send, delete, or modify your mail.</small></span></li>
             <li><LockKeyhole /><span><strong>Device-held encryption</strong><small>Firebase never receives the key needed to read your inbox.</small></span></li>
             <li><ShieldCheck /><span><strong>You confirm the mailbox</strong><small>T0 is not established until the selected address looks right.</small></span></li>
           </ul>
-          <button className="onboarding-primary" type="button" onClick={() => setStarted(true)}>Start setup <ArrowRight /></button>
+          <button className="onboarding-primary" type="button" onClick={() => setStarted(true)}>Set up cloud vault <ArrowRight /></button>
         </>}
 
         {started && !firebase && <>
@@ -298,7 +306,7 @@ export function OnboardingApp() {
           <div className="onboarding-icon"><UserRoundCheck /></div>
           <span className="onboarding-kicker">Your Boxie account</span>
           <h1>Choose who owns this encrypted vault.</h1>
-          <p>This login controls access to encrypted Boxie data. It is separate from the Outlook mailbox you’ll choose afterward.</p>
+          <p>Google identifies the owner of this optional cloud vault. It is not required for the local Outlook inbox. The consent screen currently uses dionlabs-fe92e.firebaseapp.com, Boxie’s Firebase authentication domain.</p>
           <button className="onboarding-primary" type="button" disabled={busy !== null} onClick={() => void run("Opening Google account chooser", async () => {
             await signInWithGoogle(firebase);
           })}><LogIn /> Choose Google account</button>
@@ -342,7 +350,7 @@ export function OnboardingApp() {
           <div className="onboarding-account-proof"><LockKeyhole /><span><strong>{user.email ?? "Boxie account"}</strong><small>Vault owner · key stays on {readyVault.local.deviceName}</small></span></div>
           {microsoftBrowserClientId()
             ? <button className="onboarding-primary" type="button" disabled={busy !== null} onClick={() => void run("Opening Microsoft account chooser", async () => {
-                setOutlook(await chooseOutlookAccount());
+                setOutlook(await chooseOutlookAccount("/?cloudVault=1"));
               })}><Mail /> Choose Outlook account</button>
             : <div className="onboarding-config-note"><strong>Browser Microsoft login needs configuration</strong><code>VITE_BOXIE_MICROSOFT_CLIENT_ID=&lt;client id&gt;</code><small>Add the localhost SPA redirect URI in Microsoft Entra, then restart Vite.</small></div>}
         </>}
@@ -387,7 +395,7 @@ export function OnboardingApp() {
             </div>
           </div>
           <div className="onboarding-next-boundary"><LockKeyhole /><span><strong>Still read-only</strong><small>Boxie now projects this encrypted device store into chats and refreshes while the app is open.</small></span></div>
-          <a className="onboarding-primary" href="/?browserMailbox=1">Open encrypted Boxie <ArrowRight /></a>
+          <a className="onboarding-primary" href="/?browserMailbox=1&cloudMailbox=1">Open encrypted Boxie <ArrowRight /></a>
         </>}
       </section>
 

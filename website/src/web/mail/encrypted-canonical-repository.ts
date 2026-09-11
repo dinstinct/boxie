@@ -100,7 +100,8 @@ export class IndexedDbEncryptedCanonicalRepository
 implements EncryptedCanonicalRepository, CanonicalReplicationQueue {
   constructor(
     private readonly uid: string,
-    private readonly vaultId: string
+    private readonly vaultId: string,
+    private readonly queueReplication = true
   ) {}
 
   async get(objectId: string): Promise<EncryptedCanonicalRecord | null> {
@@ -127,7 +128,7 @@ implements EncryptedCanonicalRepository, CanonicalReplicationQueue {
         storedAt: Date.now(),
         cloudRevision: alreadyReplicated ? revision : existing?.cloudRevision ?? null
       });
-      if (alreadyReplicated) {
+      if (alreadyReplicated || !this.queueReplication) {
         await queue.delete(key);
       } else {
         await queue.put({

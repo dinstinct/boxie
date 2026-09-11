@@ -1,6 +1,6 @@
 {
   "name": "boxie-website",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "type": "module",
   "engines": {
@@ -8,7 +8,7 @@
   },
   "scripts": {
     "build": "node scripts/check-build-env.mjs && vite build && node scripts/build-cloudflare.mjs",
-    "test": "vitest run",
+    "test": "vitest run && node scripts/test-routing.mjs",
     "typecheck": "tsc --noEmit -p tsconfig.web.json",
     "deploy": "wrangler deploy"
   },

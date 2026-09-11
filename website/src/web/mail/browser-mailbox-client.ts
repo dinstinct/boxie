@@ -85,6 +85,9 @@ export class BrowserMailboxClient implements MailboxClient {
       ...client.status,
       localStorage: await ensureBrowserStorageHealth()
     };
+    if (!options.cloudReplicator && client.status.localStorage?.warning) {
+      client.status.localStorage.warning = client.status.localStorage.warning.replace("Encrypted backup remains available.", "Cloud backup is not enabled for this local inbox.");
+    }
     await client.reproject();
     client.replicateEncryptedMailbox();
     return client;
@@ -282,6 +285,7 @@ export class BrowserMailboxClient implements MailboxClient {
   }
 
   private async reproject(): Promise<void> {
+    if (this.sourceSync) this.mailbox = await this.sourceSync.effectiveMailbox(this.mailbox);
     const baseline = await this.store.listMessages(this.mailbox);
     const messages = this.sourceSync ? mergeSourceMemberships(baseline, await this.sourceSync.memberships(this.mailbox, baseline)) : baseline;
     this.projection = await projectBrowserConversations({

@@ -831,6 +831,7 @@ export function App({
             </div>
             <div className="brand-actions">
               <a href="/feedback">Feedback</a>
+              {mailboxClient.kind === "browser" && <a href="/?cloudVault=1">Cloud sync (optional)</a>}
               <a href="/delete-account" title="Delete your Boxie account" aria-label="Delete your Boxie account"><Trash2 size={18} /></a>
               <button
                 type="button"
