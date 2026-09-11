@@ -79,6 +79,6 @@ describe('beta intake boundary',()=>{
     env.ASSETS={fetch:async r=>new Response(new URL(r.url).pathname)};
     for (const path of ['/app','/feedback','/delete-account','/?onboarding=1']) expect(await (await worker.fetch(new Request(`https://boxie.dionlabs.ai${path}`),env)).text()).toBe('/app/');
     const beta = await worker.fetch(new Request('https://boxie.dionlabs.ai/beta'),env);
-    expect(await beta.text()).toBe('/beta.html');expect(beta.headers.get('Content-Security-Policy')).toContain("frame-ancestors 'none'");
+    expect(await beta.text()).toBe('/beta/');expect(beta.headers.get('Content-Security-Policy')).toContain("frame-ancestors 'none'");
   });
 });

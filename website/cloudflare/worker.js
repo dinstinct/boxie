@@ -5,7 +5,7 @@ export default {
     const url = new URL(request.url);
     if (url.pathname.startsWith('/api/beta/')) return handleBeta(request, env);
     if (url.pathname === '/beta' || url.pathname === '/beta/' || url.pathname === '/beta.html') {
-      url.pathname = '/beta.html';
+      url.pathname = '/beta/';
       const asset = await env.ASSETS.fetch(new Request(url, request));
       const response = new Response(asset.body, asset);
       response.headers.set('Content-Security-Policy', "default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; connect-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'");
