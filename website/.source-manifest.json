@@ -1,8 +1,13 @@
 [
   ".env.example",
   ".gitignore",
+  "cloudflare/beta.js",
+  "cloudflare/migrations/0001_beta.sql",
   "cloudflare/worker.js",
   "index.html",
+  "launch/beta.css",
+  "launch/beta.html",
+  "launch/beta.js",
   "launch/index.html",
   "launch/launch.css",
   "launch/privacy.html",
