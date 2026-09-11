@@ -15,7 +15,8 @@
       "/feedback",
       "/beta",
       "/beta/",
-      "/api/beta/*"
+      "/api/beta/*",
+      "/beta.html"
     ]
   },
   "routes": [
@@ -29,8 +30,7 @@
       "binding": "BETA_DB",
       "database_name": "boxie-beta",
       "database_id": "0f59134a-52df-4605-8923-58c86521e61a",
-      "migrations_dir": "cloudflare/migrations",
-      "jurisdiction": "eu"
+      "migrations_dir": "cloudflare/migrations"
     }
   ],
   "vars": {

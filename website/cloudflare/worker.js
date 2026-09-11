@@ -4,7 +4,7 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
     if (url.pathname.startsWith('/api/beta/')) return handleBeta(request, env);
-    if (url.pathname === '/beta' || url.pathname === '/beta/') {
+    if (url.pathname === '/beta' || url.pathname === '/beta/' || url.pathname === '/beta.html') {
       url.pathname = '/beta.html';
       const asset = await env.ASSETS.fetch(new Request(url, request));
       const response = new Response(asset.body, asset);

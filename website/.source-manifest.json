@@ -1,6 +1,7 @@
 [
   ".env.example",
   ".gitignore",
+  "cloudflare/beta-ui.test.js",
   "cloudflare/beta.js",
   "cloudflare/beta.test.js",
   "cloudflare/migrations/0001_beta.sql",
@@ -28,6 +29,7 @@
   "public/site.webmanifest",
   "README.md",
   "redirect.html",
+  "scripts/beta-review.mjs",
   "scripts/build-cloudflare.mjs",
   "scripts/check-build-env.mjs",
   "src/contracts/conversations.ts",
