@@ -285,6 +285,7 @@ export class BrowserMailboxClient implements MailboxClient {
   }
 
   private async reproject(): Promise<void> {
+    if (this.sourceSync) this.mailbox = await this.sourceSync.effectiveMailbox(this.mailbox);
     const baseline = await this.store.listMessages(this.mailbox);
     const messages = this.sourceSync ? mergeSourceMemberships(baseline, await this.sourceSync.memberships(this.mailbox, baseline)) : baseline;
     this.projection = await projectBrowserConversations({

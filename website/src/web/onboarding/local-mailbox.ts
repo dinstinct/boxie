@@ -50,3 +50,23 @@ export async function activateLocalMailbox(account: SelectedOutlookAccount): Pro
     return client;
   });
 }
+
+
+export async function localMailboxSnapshot(account: SelectedOutlookAccount) {
+  const uid = await localAccountUid(account);
+  const local = await loadLocalVault(uid);
+  if (!local) return null;
+  const vaultKey = await readLocalVaultKey(local);
+  const store = BrowserCanonicalMailStore.create({localVault: local, vaultKey,
+    repository: new IndexedDbEncryptedCanonicalRepository(uid, local.vaultId, false)});
+  const mailboxes = await store.listMailboxes();
+  if (mailboxes.length !== 1 || mailboxes[0]!.providerAccountId !== account.homeAccountId) throw new Error('Local mailbox identity needs review before consolidation.');
+  return {local, vaultKey, mailbox: mailboxes[0]!, messages: await store.listMessages(mailboxes[0]!)};
+}
+export async function selectConsolidatedCloud(account: SelectedOutlookAccount, cloudUid: string) {
+  localStorage.setItem(`boxie.consolidated.${await localAccountUid(account)}`, cloudUid);
+}
+export function selectedCloudUid(): string | null {
+  const uid = localStorage.getItem(activeKey);
+  return uid ? localStorage.getItem(`boxie.consolidated.${uid}`) : null;
+}

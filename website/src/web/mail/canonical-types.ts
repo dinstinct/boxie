@@ -28,6 +28,7 @@ export interface BrowserCanonicalMailbox {
   emailAddress: string;
   informationSpace: "personal";
   activatedAt: string;
+  consolidationBaselineActivatedAt?: string;
   createdAt: string;
   updatedAt: string;
   cursors: Record<OutlookFolderKind, BrowserSyncCursor>;
@@ -47,6 +48,7 @@ export interface BrowserCanonicalMessage {
   updatedAt: string;
   providerRemovedAt: string | null;
   providerRemovedReason: string | null;
+  providerResetActivatedAt?: string;
 }
 
 export function assertCanonicalMailbox(value: unknown): BrowserCanonicalMailbox {

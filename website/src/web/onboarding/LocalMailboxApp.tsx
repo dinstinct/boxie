@@ -4,7 +4,7 @@ import {OnboardingApp} from './OnboardingApp';
 import type {BrowserMailboxClient} from '../mail/browser-mailbox-client';
 import {CloudMailboxApp} from '../mail/BrowserMailboxApp';
 import {hasSavedCloudVault} from '../vault-spike/local-store';
-import {activateLocalMailbox, openLocalMailbox} from './local-mailbox';
+import {activateLocalMailbox, openLocalMailbox, selectedCloudUid} from './local-mailbox';
 import {chooseOutlookAccount, consumeOutlookRedirectAccount, hasPendingOutlookRedirect, microsoftBrowserClientId} from './microsoft-browser';
 import './onboarding.css';
 
@@ -25,6 +25,12 @@ async function resolveEntry(): Promise<Entry> {
     }
   }
   if (new URLSearchParams(location.search).get('cloudMailbox') === '1') return {kind:'cloud'};
+  const selected = selectedCloudUid();
+  if (selected) {
+    const {onboardingFirebaseClient} = await import('./vault-setup');
+    const firebase = onboardingFirebaseClient();
+    if (firebase) {await firebase.auth.authStateReady(); if (firebase.auth.currentUser?.uid === selected) return {kind:'cloud'};}
+  }
   const client = await openLocalMailbox();
   if (client) return {kind:'local', client};
   // Restore existing cloud users without requiring Firebase for a fresh user.

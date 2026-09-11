@@ -68,6 +68,8 @@
   "src/web/mail/sync-v2-outlook.ts",
   "src/web/mail/sync-v2-read-cache.test.ts",
   "src/web/mail/sync-v2-store.ts",
+  "src/web/mail/vault-consolidation.test.ts",
+  "src/web/mail/vault-consolidation.ts",
   "src/web/mailbox-client.ts",
   "src/web/main.tsx",
   "src/web/onboarding/initialize-sync.test.ts",

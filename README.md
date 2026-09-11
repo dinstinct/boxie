@@ -8,10 +8,10 @@ Boxie turns personal Outlook email into conversations, separates unfamiliar send
 
 ## Early access
 
-Experimental public registration is open. Start on the website with your personal Microsoft account: the browser inbox is encrypted locally and does not require Google sign-in or Firebase cloud setup. Cloud storage and device pairing are optional later choices. The current cloud flow still uses the original Google owner account and opens a separate cloud inbox; local history and organization are not automatically migrated. Work/school Microsoft accounts and direct Gmail connections are not supported yet.
+Experimental public registration is open. Start on the web or Android with your personal Microsoft account: your inbox is encrypted locally and does not require Google sign-in or Firebase cloud setup. Cloud storage and device pairing are optional later choices. The optional cloud flow uses the original Google owner account. Create the first shared vault or pair with the existing vault, then explicitly consolidate your local inbox. Mailbox identity must match exactly; the earliest activation time and original local copy are retained, and existing shared organization wins conflicts. Work/school Microsoft accounts and direct Gmail connections are not supported yet.
 
-- **Web:** [open the Outlook-first inbox](https://boxie.dionlabs.ai/app) · [September 11 browser release](https://github.com/dion-labs/boxie/releases/tag/web-2026.09.11).
-- **Android:** [signed 0.2.7 preview APK](https://github.com/dion-labs/boxie/releases/tag/android-v0.2.7-preview.1). Android 8 or later. The current native client still requires Google sign-in and cloud pairing. First create your optional vault on the web, then sign into the same Boxie account and approve pairing from your existing device.
+- **Web:** [open the Outlook-first inbox](https://boxie.dionlabs.ai/app) · [September 11 consolidation release](https://github.com/dion-labs/boxie/releases/tag/web-2026.09.11.1).
+- **Android:** [signed 0.2.8 preview APK](https://github.com/dion-labs/boxie/releases/tag/android-v0.2.8-preview.1). Android 8 or later. Connect personal Outlook to begin. Cloud sign-in and pairing are optional; existing vaults require approval from a trusted device before consolidation.
 - **macOS:** public distribution is being prepared. Developer ID signing and notarization must complete before a public Mac download is advertised. The current development build is not a general-release installer.
 
 Background sync can be delayed by the operating system or service quotas. Assistant configuration is optional and uses your chosen provider; its fees and privacy policy apply. Assistant chat history currently remains local to each device.

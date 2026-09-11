@@ -3,13 +3,13 @@ import {act, StrictMode} from 'react';
 import {createRoot} from 'react-dom/client';
 import {afterEach, beforeEach, expect, it, vi} from 'vitest';
 const mocks = vi.hoisted(() => ({
-  saved:vi.fn(), open:vi.fn(), activate:vi.fn(), pending:vi.fn(), consume:vi.fn(), firebase:vi.fn()
+  selected:vi.fn(), saved:vi.fn(), open:vi.fn(), activate:vi.fn(), pending:vi.fn(), consume:vi.fn(), firebase:vi.fn()
 }));
 vi.mock('./OnboardingApp',()=>({OnboardingApp:()=> <div>Legacy cloud setup callback</div>}));
 vi.mock('../App',()=>({App:()=> <div>Actual inbox screen</div>}));
 vi.mock('../mail/BrowserMailboxApp',()=>({CloudMailboxApp:()=> <div>Existing cloud inbox</div>}));
 vi.mock('../vault-spike/local-store',()=>({hasSavedCloudVault:mocks.saved}));
-vi.mock('./local-mailbox',()=>({activateLocalMailbox:mocks.activate,openLocalMailbox:mocks.open}));
+vi.mock('./local-mailbox',()=>({activateLocalMailbox:mocks.activate,openLocalMailbox:mocks.open,selectedCloudUid:mocks.selected}));
 vi.mock('./vault-setup',()=>({onboardingFirebaseClient:mocks.firebase}));
 vi.mock('./microsoft-browser',()=>({hasPendingOutlookRedirect:mocks.pending,consumeOutlookRedirectAccount:mocks.consume,
   microsoftBrowserClientId:()=> 'configured',chooseOutlookAccount:vi.fn()}));
@@ -19,6 +19,7 @@ beforeEach(()=>{
   vi.resetModules(); vi.clearAllMocks();
   Object.assign(globalThis,{IS_REACT_ACT_ENVIRONMENT:true});
   window.history.replaceState({},'', '/app');
+  mocks.selected.mockReturnValue(null);
   mocks.saved.mockResolvedValue(false);mocks.open.mockResolvedValue(null);mocks.pending.mockReturnValue(false);
   mocks.firebase.mockImplementation(()=>{throw new Error('Firebase must not be needed');});
   container=document.createElement('div');document.body.append(container);root=createRoot(container);

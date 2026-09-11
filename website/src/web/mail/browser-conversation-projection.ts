@@ -71,7 +71,7 @@ export async function projectBrowserConversations(input: {
   };
 }
 
-function toWorkingMessage(
+export function toWorkingMessage(
   mailbox: BrowserCanonicalMailbox,
   source: BrowserCanonicalMessage
 ): WorkingMessage {

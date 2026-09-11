@@ -1,3 +1,5 @@
+import {localMailboxSnapshot, selectConsolidatedCloud} from './local-mailbox';
+import {VaultConsolidation} from '../mail/vault-consolidation';
 import {reportFailure} from '../support/reporting';
 import {initializeFirstMailbox} from "./initialize-sync";
 import {SyncV2Store} from "../mail/sync-v2-store";
@@ -173,6 +175,7 @@ export function OnboardingApp() {
     setError(null);
     try {
       setBusy("Preparing encrypted mail storage");
+      const localSnapshot = await localMailboxSnapshot(outlook);
       const vaultKey = await readLocalVaultKey(readyVault.local);
       const localRepository = new IndexedDbEncryptedCanonicalRepository(
         readyVault.local.uid,
@@ -210,7 +213,7 @@ export function OnboardingApp() {
           if ((await Promise.all(existing.map(mailbox => store.listMessages(mailbox)))).some(messages => messages.length > 0)) {
             throw new Error("Existing mail needs an explicit migration, not first-device setup.");
           }
-          await store.activateOutlookAccount({providerAccountId: outlook.homeAccountId, emailAddress: outlook.username, activatedAt: new Date().toISOString()});
+          await store.activateOutlookAccount({providerAccountId: outlook.homeAccountId, emailAddress: outlook.username, activatedAt: localSnapshot?.mailbox.activatedAt ?? new Date().toISOString()});
           const replication = await new CanonicalCloudReplicator(localRepository, cloudRepository).drain();
           if (replication.remaining !== 0) throw new Error("Encrypted identity backup did not finish. Retry setup.");
         }, verifyBaseline});
@@ -220,6 +223,10 @@ export function OnboardingApp() {
         const recovery = await recoverRepresentedLegacyQueue({queue: localRepository, cloud: cloudRepository, vault: {...syncVault, uid: readyVault.local.uid}});
         if (recovery.remaining) throw new Error("Older local changes remain preserved and need review before sync can continue.");
       }
+      if (localSnapshot) {
+        setBusy("Consolidating this device’s encrypted inbox");
+        await new VaultConsolidation(sync, syncVault).publish(localSnapshot, {vaultId: localSnapshot.local.vaultId, vaultKey: localSnapshot.vaultKey}, mailbox);
+      }
       setBusy("Syncing new mail with your encrypted vault");
       const source = new SyncedOutlook(sync, syncVault);
       const baseline = await store.listMessages(mailbox);
@@ -227,6 +234,7 @@ export function OnboardingApp() {
       const messages = mergeSourceMemberships(baseline, await source.memberships(mailbox, baseline));
       const results: BrowserOutlookSyncResult[] = [];
       if (readyVault.local.uid !== accountUidRef.current) return;
+      await selectConsolidatedCloud(outlook, readyVault.local.uid);
       setInitialSync({
         activatedAt: mailbox.activatedAt,
         activeMessageCount: messages.filter((message) => !message.providerRemovedAt).length,
@@ -275,7 +283,7 @@ export function OnboardingApp() {
           <div className="onboarding-hero-art"><img src="/brand/boxie-avatar.png" alt="Boxie" /></div>
           <span className="onboarding-kicker">Optional cloud vault</span>
           <h1>Connect your devices.</h1>
-          <p>This separate setup enables encrypted cloud storage and device pairing. Existing vault owners must use their original Google account. A local browser inbox is preserved separately; its messages and organization are not migrated by this setup.</p>
+          <p>This separate setup enables encrypted cloud storage and device pairing. Existing vault owners must use their original Google account. This device’s local inbox is imported after the exact Outlook account is verified. Existing shared organization wins conflicts; your original local copy is retained.</p>
           <ul className="onboarding-promises">
             <li><Mail /><span><strong>Read-only Outlook</strong><small>Boxie cannot send, delete, or modify your mail.</small></span></li>
             <li><LockKeyhole /><span><strong>Device-held encryption</strong><small>Firebase never receives the key needed to read your inbox.</small></span></li>
