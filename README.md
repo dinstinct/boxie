@@ -10,7 +10,7 @@ Boxie turns personal Outlook email into conversations, separates unfamiliar send
 
 Experimental public registration is open. Start on the web or Android with your personal Microsoft account: your inbox is encrypted locally and does not require Google sign-in or Firebase cloud setup. Cloud storage and device pairing are optional later choices. The optional cloud flow uses the original Google owner account. Create the first shared vault or pair with the existing vault, then explicitly consolidate your local inbox. Mailbox identity must match exactly; the earliest activation time and original local copy are retained, and existing shared organization wins conflicts. Work/school Microsoft accounts and direct Gmail connections are not supported yet.
 
-- **Web:** [open the Outlook-first inbox](https://boxie.dionlabs.ai/app) · [Android recruitment release](https://github.com/dion-labs/boxie/releases/tag/web-2026.09.11.2).
+- **Web:** [open the Outlook-first inbox](https://boxie.dionlabs.ai/app) · [Android recruitment release](https://github.com/dion-labs/boxie/releases/tag/web-2026.09.11.3).
 - **Android:** [signed 0.2.8 preview APK](https://github.com/dion-labs/boxie/releases/tag/android-v0.2.8-preview.1). Android 8 or later. Connect personal Outlook to begin. Cloud sign-in and pairing are optional; existing vaults require approval from a trusted device before consolidation.
 - **macOS:** public distribution is being prepared. Developer ID signing and notarization must complete before a public Mac download is advertised. The current development build is not a general-release installer.
 

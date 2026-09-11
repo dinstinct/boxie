@@ -25,4 +25,18 @@ describe('application UI',()=>{
     dom.window.document.querySelector('#withdraw-button').click();await tick();
     expect(fetch.mock.calls[0][0]).toBe('/api/beta/withdraw');expect(JSON.parse(fetch.mock.calls[0][1].body)).toEqual({token:receipt});dom.window.close();
   });
+  it('opens a pasted same-tab withdrawal link after application success',async()=>{
+    const receipt='c'.repeat(64);const fetch=vi.fn(async()=>Response.json({ok:true,withdrawalToken:receipt}));const dom=page(fetch);
+    dom.window.document.querySelector('form').dispatchEvent(new dom.window.Event('submit',{cancelable:true}));await tick();
+    dom.window.location.hash=`withdraw=${receipt}`;await tick();await tick();
+    expect(dom.window.document.querySelector('#withdraw').hidden).toBe(false);
+    expect(dom.window.document.querySelector('#intake').hidden).toBe(true);
+    expect(dom.window.location.hash).toBe('');expect(fetch).toHaveBeenCalledTimes(1);
+    dom.window.document.querySelector('#withdraw-button').click();await tick();
+    expect(JSON.parse(fetch.mock.calls[1][1].body)).toEqual({token:receipt});
+    const next='d'.repeat(64);dom.window.location.hash=`withdraw=${next}`;await tick();await tick();
+    const button=dom.window.document.querySelector('#withdraw-button');expect(button.hidden).toBe(false);expect(button.disabled).toBe(false);
+    button.click();await tick();expect(JSON.parse(fetch.mock.calls[2][1].body)).toEqual({token:next});dom.window.close();
+  });
+
 });
