@@ -1,0 +1,14 @@
+{
+  "tag": "android-v0.2.9-preview.1",
+  "packageName": "ai.dionlabs.boxie",
+  "versionCode": 12,
+  "releaseName": "0.2.9 \u2014 Conversation archive",
+  "aab": "Boxie-Android-0.2.9.aab",
+  "sha256": "f8a3613df6d1e17fd85e4033876391b817d90bc9de513d5413fc9ae7850eff29",
+  "releaseNotes": [
+    {
+      "language": "en-US",
+      "text": "Archive conversations to hide them without deleting mail. Find them in Archived or restore them manually. New incoming email automatically brings the chat back; older history and outgoing messages leave it archived. Archive preferences sync across updated clients when using an encrypted shared vault."
+    }
+  ]
+}

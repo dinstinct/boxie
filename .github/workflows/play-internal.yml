@@ -1,0 +1,63 @@
+name: Play internal release
+on:
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: Published Android GitHub release tag
+        required: true
+        type: string
+      mode:
+        description: Validate artifacts/access or publish to internal testers
+        required: true
+        default: validate
+        type: choice
+        options: [validate, publish]
+permissions:
+  contents: read
+concurrency:
+  group: play-internal-ai-dionlabs-boxie
+  cancel-in-progress: false
+jobs:
+  release:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment: play-internal
+    timeout-minutes: 20
+    permissions:
+      contents: read
+      id-token: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      RELEASE_TAG: ${{ inputs.release_tag }}
+      RELEASE_MODE: ${{ inputs.mode }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - name: Test release safety checks
+        run: python3 -m unittest discover -s scripts -p 'test_play_release.py'
+      - name: Verify release assets and notes
+        run: python3 scripts/play_release.py prepare --tag "$RELEASE_TAG"
+      - id: google
+        uses: google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093
+        with:
+          workload_identity_provider: ${{ vars.PLAY_WIF_PROVIDER }}
+          service_account: ${{ vars.PLAY_SERVICE_ACCOUNT }}
+          token_format: access_token
+          access_token_scopes: https://www.googleapis.com/auth/androidpublisher
+          create_credentials_file: false
+      - name: Validate or publish internal release
+        env:
+          PLAY_ACCESS_TOKEN: ${{ steps.google.outputs.access_token }}
+        run: python3 scripts/play_release.py "$RELEASE_MODE" --tag "$RELEASE_TAG"
+      - name: Release receipt
+        if: always()
+        env:
+          JOB_STATUS: ${{ job.status }}
+        run: |
+          echo "Workflow outcome: $JOB_STATUS" >> "$GITHUB_STEP_SUMMARY"
+          echo "Release: https://github.com/dion-labs/boxie/releases/tag/$RELEASE_TAG" >> "$GITHUB_STEP_SUMMARY"
+          if [ -f play-artifacts/result.json ]; then
+            echo '## Play release receipt' >> "$GITHUB_STEP_SUMMARY"
+            echo '```json' >> "$GITHUB_STEP_SUMMARY"
+            cat play-artifacts/result.json >> "$GITHUB_STEP_SUMMARY"
+            echo '```' >> "$GITHUB_STEP_SUMMARY"
+          fi
