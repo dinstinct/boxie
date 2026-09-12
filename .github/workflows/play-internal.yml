@@ -36,17 +36,6 @@ jobs:
         run: python3 -m unittest discover -s scripts -p 'test_play_release.py'
       - name: Verify release assets and notes
         run: python3 scripts/play_release.py prepare --tag "$RELEASE_TAG"
-      - name: Inspect release identity claims
-        run: |
-          python3 - <<'PYTHON'
-          import os, json, base64, urllib.request
-          req = urllib.request.Request(os.environ['ACTIONS_ID_TOKEN_REQUEST_URL'], headers={'Authorization': 'Bearer ' + os.environ['ACTIONS_ID_TOKEN_REQUEST_TOKEN']})
-          with urllib.request.urlopen(req) as response:
-              token = json.load(response)['value']
-          body = token.split('.')[1]
-          claims = json.loads(base64.urlsafe_b64decode(body + '=' * (-len(body) % 4)))
-          print(json.dumps({k: claims.get(k) for k in ['repository_id', 'repository_owner_id', 'ref', 'sub', 'workflow_ref']}, indent=2))
-          PYTHON
       - id: google
         uses: google-github-actions/auth@7c6bc770dae815cd3e89ee6cdf493a5fab2cc093
         with:

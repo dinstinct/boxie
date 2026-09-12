@@ -43,7 +43,7 @@ condition to all of:
 - `assertion.repository_id == '1358379126'`
 - `assertion.repository_owner_id == '252023800'`
 - `assertion.ref == 'refs/heads/main'`
-- `assertion.sub == 'repo:dion-labs/boxie:environment:play-internal'`
+- `assertion.sub == 'repo:dion-labs@252023800/boxie@1358379126:environment:play-internal'`
 - `assertion.workflow_ref == 'dion-labs/boxie/.github/workflows/play-internal.yml@refs/heads/main'`
 
 Grant `roles/iam.workloadIdentityUser` on that service account to the pool's
