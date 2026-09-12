@@ -63,6 +63,8 @@ export interface PrivateAssistantTurn {
 }
 
 export type ConversationAction =
+  | "archive"
+  | "unarchive"
   | "accept"
   | "keep_request"
   | "check_history"
@@ -175,7 +177,7 @@ export class ServerMailboxClient implements MailboxClient {
     conversationId: string,
     action: ConversationAction
   ): Promise<ConversationDetail> {
-    const moderationAction = ["junk", "not_junk", "trash", "restore"].includes(action);
+    const moderationAction = ["archive", "unarchive", "junk", "not_junk", "trash", "restore"].includes(action);
     const endpoint = moderationAction
       ? `/api/conversations/${encodeURIComponent(conversationId)}/moderation`
       : action === "check_history"

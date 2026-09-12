@@ -129,11 +129,14 @@ function projectConversation(
     : hasOutgoing
       ? "post_activation_outgoing"
       : null;
+  const archived = Boolean(preference.archivedAt) && !messages.some(message =>
+    message.source.direction === "incoming" && Date.parse(message.occurredAt) > Date.parse(preference.archivedAt!));
   const moderation = preference.moderation ?? "normal";
   const section: ConversationSection = moderation === "trash"
     ? "trash"
     : moderation === "junk"
       ? "junk"
+      : archived ? "archived"
       : admission === "accepted"
         ? kind === "channel" ? "channels" : "chats"
         : "requests";

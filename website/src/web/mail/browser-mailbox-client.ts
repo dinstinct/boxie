@@ -209,7 +209,10 @@ export class BrowserMailboxClient implements MailboxClient {
     if (action === "check_history") {
       throw new Error("Historical relationship lookup is not available in the browser slice yet.");
     }
+    const archivedAt = new Date().toISOString();
     await this.updatePreference(conversationId, (current) => {
+      if (action === "archive") return { ...current, archivedAt };
+      if (action === "unarchive") return { ...current, archivedAt: "" };
       if (action === "accept") return { ...current, admission: "accepted" };
       if (action === "keep_request") return { ...current, admission: "kept_request" };
       if (action === "junk") return { ...current, moderation: "junk" };

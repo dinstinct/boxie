@@ -23,6 +23,7 @@ import {
   ShieldBan,
   ShieldCheck,
   Sparkles,
+  Archive,
   Trash2,
   Undo2,
   UsersRound
@@ -97,6 +98,7 @@ const sections: Array<{
   { id: "channels", label: "Channels", icon: Hash },
   { id: "recent", label: "Recent", icon: Clock3 },
   { id: "junk", label: "Junk", icon: ShieldBan },
+  { id: "archived", label: "Archived", icon: Archive },
   { id: "trash", label: "Trash", icon: Trash2 }
 ];
 
@@ -354,9 +356,10 @@ export function App({
         .reduce((total, conversation) => total + conversation.unreadCount, 0),
       junk: 0,
       trash: 0,
+      archived: 0,
       recent: conversations.reduce(
         (total, conversation) =>
-          conversation.section === "junk" || conversation.section === "trash"
+          conversation.section === "archived" || conversation.section === "junk" || conversation.section === "trash"
             ? total
             : total + conversation.unreadCount,
         0
@@ -367,7 +370,7 @@ export function App({
   const visibleConversations = useMemo(() => {
     const normalizedQuery = query.trim().toLocaleLowerCase();
     return conversations.filter((conversation) => {
-      const inSection = section === "recent" || conversation.section === section;
+      const inSection = (section === "recent" && conversation.section !== "archived") || conversation.section === section;
       const matches =
         normalizedQuery.length === 0 ||
         conversation.name.toLocaleLowerCase().includes(normalizedQuery) ||
@@ -415,7 +418,7 @@ export function App({
     setConversationMenu({
       conversation,
       x: Math.max(8, Math.min(requestedX, window.innerWidth - 208)),
-      y: Math.max(8, Math.min(requestedY, window.innerHeight - 154))
+      y: Math.max(8, Math.min(requestedY, window.innerHeight - 200))
     });
   }
 
@@ -668,13 +671,13 @@ export function App({
     }
   }
 
-  async function runConversationAction(action: ConversationAction) {
-    if (!selectedId || conversationAction) return;
+  async function runConversationAction(action: ConversationAction, conversationId = selectedId) {
+    if (!conversationId || conversationAction) return;
     setConversationAction(action);
     setActionError(null);
 
     try {
-      const detail = await mailboxClient.runConversationAction(selectedId, action);
+      const detail = await mailboxClient.runConversationAction(conversationId, action);
       const nextIndex = await mailboxClient.loadIndex();
       setDetailState({ kind: "loaded", data: detail });
       setIndexState({ kind: "loaded", data: nextIndex });
@@ -924,7 +927,7 @@ export function App({
           {showMobileMore && (
             <div className="mobile-more-menu">
               {sections
-                .filter(({ id }) => id === "recent" || id === "trash")
+                .filter(({ id }) => id === "recent" || id === "archived" || id === "trash")
                 .map(({ id, label, icon: Icon }) => (
                   <button key={id} type="button" onClick={() => chooseSection(id)}>
                     <Icon aria-hidden="true" />
@@ -947,7 +950,7 @@ export function App({
           ))}
           <button
             type="button"
-            aria-current={section === "recent" || section === "trash" ? "page" : undefined}
+            aria-current={section === "recent" || section === "archived" || section === "trash" ? "page" : undefined}
             aria-expanded={showMobileMore}
             onClick={() => setShowMobileMore((current) => !current)}
           >
@@ -997,6 +1000,11 @@ export function App({
           aria-label={`Actions for ${conversationMenu.conversation.name}`}
           style={{ left: conversationMenu.x, top: conversationMenu.y }}
         >
+          {conversationMenu.conversation.moderation === "normal" && <button type="button" role="menuitem" onClick={() => {
+            const conversation = conversationMenu.conversation;
+            setConversationMenu(null);
+            void runConversationAction(conversation.section === "archived" ? "unarchive" : "archive", conversation.id);
+          }}><Archive aria-hidden="true" /><span>{conversationMenu.conversation.section === "archived" ? "Unarchive" : "Archive"}</span></button>}
           <button
             type="button"
             role="menuitem"
@@ -1202,6 +1210,7 @@ function ConversationView({
       ? "In Trash"
       : conversation.moderation === "junk"
         ? "Blocked sender"
+        : conversation.section === "archived" ? "Archived · returns with new mail"
         : conversation.section === "requests"
           ? "Unverified sender"
           : "Active conversation";
@@ -1221,6 +1230,10 @@ function ConversationView({
           </p>
         </div>
         {!conversation.isBoxie && <div className="conversation-actions">
+          {conversation.moderation === "normal" && <button type="button" className="conversation-action" disabled={action !== null}
+            onClick={() => onAction(conversation.section === "archived" ? "unarchive" : "archive")}
+            aria-label={conversation.section === "archived" ? "Unarchive conversation" : "Archive conversation"}
+            title={conversation.section === "archived" ? "Restore this conversation" : "Hide until a new email arrives"}><Archive aria-hidden="true" /><span>{conversation.section === "archived" ? "Unarchive" : "Archive"}</span></button>}
           {conversation.moderation === "trash" ? (
             <button
               type="button"

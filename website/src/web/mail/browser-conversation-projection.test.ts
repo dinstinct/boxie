@@ -5,6 +5,30 @@ import { projectBrowserConversations } from "./browser-conversation-projection";
 const vaultKey = new Uint8Array(32).fill(9);
 
 describe("projectBrowserConversations", () => {
+  it("archives without removing mail and resurfaces only on newer incoming mail", async () => {
+    const mailbox = exampleMailbox();
+    const original = incoming("one", "thread", "Alice", "alice@example.com", "Hello", "Hello", "Hello");
+    original.providerPayload.receivedDateTime = "2026-09-12T10:00:00Z";
+    const project = (messages: BrowserCanonicalMessage[]) => projectBrowserConversations({ mailbox, vaultKey, messages });
+    const initial = await project([original]);
+    const id = initial.index.conversations.find(c => !c.isBoxie)!.id;
+    mailbox.conversationPreferences[id] = { admission: "accepted", archivedAt: "2026-09-12T11:00:00.000Z" };
+    expect((await project([original])).details.get(id)).toMatchObject({section: "archived", messageCount: 1, moderation: "normal"});
+    const sent = outgoing("sent", "thread", "alice@example.com");
+    sent.providerPayload.sentDateTime = "2026-09-12T12:00:00Z";
+    expect((await project([original, sent])).details.get(id)?.section).toBe("archived");
+    const old = structuredClone(original); old.providerMessageId = "old"; old.providerPayload.id = "old";
+    old.providerPayload.receivedDateTime = "2026-09-11T10:00:00Z";
+    expect((await project([original, old])).details.get(id)?.section).toBe("archived");
+    const fresh = structuredClone(original); fresh.providerMessageId = "fresh"; fresh.providerPayload.id = "fresh";
+    fresh.providerPayload.receivedDateTime = "2026-09-12T12:00:00Z";
+    expect((await project([original, fresh])).details.get(id)?.section).toBe("chats");
+    mailbox.conversationPreferences[id]!.moderation = "junk";
+    expect((await project([original, fresh])).details.get(id)?.section).toBe("junk");
+    mailbox.conversationPreferences[id] = { admission: "accepted", archivedAt: "" };
+    expect((await project([original])).details.get(id)?.section).toBe("chats");
+  });
+
   it("collapses people, preserves topics and originals, and renders CC as a group", async () => {
     const mailbox = exampleMailbox();
     const projection = await projectBrowserConversations({

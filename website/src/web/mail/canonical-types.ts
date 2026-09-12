@@ -13,6 +13,7 @@ export interface BrowserSyncCursor {
 export interface BrowserConversationPreference {
   customName?: string;
   admission?: "accepted" | "kept_request";
+  archivedAt?: string;
   moderation?: "normal" | "junk" | "trash";
   locallyReadMessageIds?: string[];
   locallyUnreadMessageIds?: string[];

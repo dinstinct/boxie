@@ -5,6 +5,7 @@ export type ConversationSection =
   | "chats"
   | "requests"
   | "channels"
+  | "archived"
   | "junk"
   | "trash";
 export type ConversationAdmissionStatus =

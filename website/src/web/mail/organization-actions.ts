@@ -5,7 +5,7 @@ import type {EncryptedObject} from "../vault-spike/types";
 import type {BrowserConversationPreference} from "./canonical-types";
 import type {SyncedOrganization} from "./sync-v2-organization";
 
-const fields = ["customName", "admission", "moderation", "locallyReadMessageIds", "locallyUnreadMessageIds"] as const;
+const fields = ["archivedAt", "customName", "admission", "moderation", "locallyReadMessageIds", "locallyUnreadMessageIds"] as const;
 export interface OrganizationJournal {
   put(operation: Operation): Promise<void>;
   remove(id: string): Promise<void>;
