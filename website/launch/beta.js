@@ -17,6 +17,10 @@ function consumeWithdrawalLink() {
 }
 window.addEventListener('hashchange', consumeWithdrawalLink);
 consumeWithdrawalLink();
+// Previously shared /beta links land on the embedded form; the full story remains above.
+if (/^\/beta\/?$/.test(location.pathname) && !withdrawalToken && !location.hash) {
+  document.querySelector('#beta')?.scrollIntoView();
+}
 async function post(path, data) {
   const response = await fetch(path, {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
   const result = await response.json().catch(()=>({}));
