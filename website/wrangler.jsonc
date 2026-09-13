@@ -17,7 +17,8 @@
       "/beta/",
       "/api/beta/*",
       "/beta.html"
-    ]
+    ],
+    "not_found_handling": "404-page"
   },
   "routes": [
     {
