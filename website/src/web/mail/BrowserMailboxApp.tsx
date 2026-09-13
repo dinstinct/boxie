@@ -133,7 +133,7 @@ export function CloudMailboxApp() {
   return (
     <main className="onboarding-shell">
       <header className="onboarding-header">
-        <a href="/" aria-label="Return to Boxie"><img src="/brand/boxie-icon.png" alt="" /><strong>Boxie</strong></a>
+        <a href="/" aria-label="Return to Boxie"><img src="/brand/boxie-icon.webp" alt="" /><strong>Boxie</strong></a>
         <a href="/feedback">Feedback / report a problem</a>
       </header>
       <section className="onboarding-card">

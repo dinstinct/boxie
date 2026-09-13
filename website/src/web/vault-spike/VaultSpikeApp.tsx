@@ -810,7 +810,7 @@ export function VaultSpikeApp() {
     return <SpikeFrame>
       {statusBanner}
       <section className="spike-card spike-signin">
-        <img src="/brand/boxie-avatar.png" alt="Boxie" />
+        <img src="/brand/boxie-avatar.webp" alt="Boxie" />
         <span className="spike-kicker">Synthetic vault experiment</span>
         <h2>Sign in to isolate your test vault</h2>
         <p>Google identifies the owner. It never receives or derives the device-held vault key.</p>
@@ -989,7 +989,7 @@ export function VaultSpikeApp() {
 function SpikeFrame({ children }: { children: React.ReactNode }) {
   return <main className="vault-spike-shell">
     <header className="spike-hero">
-      <a href="/" aria-label="Return to Boxie"><img src="/brand/boxie-avatar.png" alt="" /></a>
+      <a href="/" aria-label="Return to Boxie"><img src="/brand/boxie-avatar.webp" alt="" /></a>
       <div><span>Boxie labs</span><h1>Encrypted device-pairing spike</h1><p>Device-held keys · explicit encrypted sync · no AI provider</p></div>
       <a className="spike-back" href="/?cloudVault=1"><ArrowLeft /> Back to setup</a>
     </header>

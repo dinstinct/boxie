@@ -263,7 +263,7 @@ export function OnboardingApp() {
     <main className="onboarding-shell">
       <a href="/feedback" style={{position:"fixed",right:20,bottom:16,zIndex:10}}>Feedback / report a problem</a>
       <header className="onboarding-header">
-        <a href="/" aria-label="Return to Boxie"><img src="/brand/boxie-icon.png" alt="" /><strong>Boxie</strong></a>
+        <a href="/" aria-label="Return to Boxie"><img src="/brand/boxie-icon.webp" alt="" /><strong>Boxie</strong></a>
         <a href="/app">Back to inbox</a>
       </header>
 
@@ -280,7 +280,7 @@ export function OnboardingApp() {
         {error && <div className="onboarding-error" role="alert">{error}</div>}
 
         {!started && <>
-          <div className="onboarding-hero-art"><img src="/brand/boxie-avatar.png" alt="Boxie" /></div>
+          <div className="onboarding-hero-art"><img src="/brand/boxie-avatar.webp" alt="Boxie" /></div>
           <span className="onboarding-kicker">Optional cloud vault</span>
           <h1>Connect your devices.</h1>
           <p>This separate setup enables encrypted cloud storage and device pairing. Existing vault owners must use their original Google account. This device’s local inbox is imported after the exact Outlook account is verified. Existing shared organization wins conflicts; your original local copy is retained.</p>
