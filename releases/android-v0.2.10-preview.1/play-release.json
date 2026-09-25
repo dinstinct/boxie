@@ -1,0 +1,14 @@
+{
+  "tag": "android-v0.2.10-preview.1",
+  "packageName": "ai.dionlabs.boxie",
+  "versionCode": 13,
+  "releaseName": "0.2.10 \u2014 Fictional-mail demo",
+  "aab": "Boxie-Android-0.2.10.aab",
+  "sha256": "fdc9c7c7d7984795bbb4b6cd9be790df0b47d844cfaf1256ee8446ca87b4986d",
+  "releaseNotes": [
+    {
+      "language": "en-US",
+      "text": "Explore Boxie before signing in with a clearly labeled fictional-mail demo. Browse conversations and original messages, accept requests, and try Archive, Junk and Trash. Reset or exit to discard sample changes. Restores Outlook-first onboarding with optional cloud pairing while retaining archive and Focused-only notifications. Settings now shows the installed version."
+    }
+  ]
+}

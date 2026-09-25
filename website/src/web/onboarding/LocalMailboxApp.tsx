@@ -61,7 +61,7 @@ export function LocalMailboxApp() {
   if(entry?.kind === 'cloud') return <CloudMailboxApp />;
   if(entry?.kind === 'local' && !new URLSearchParams(location.search).has('onboarding')) return <App mailboxClient={entry.client} />;
   return <main className="onboarding-shell">
-    <header className="onboarding-header"><a href="/"><img src="/brand/boxie-icon.png" alt=""/><strong>Boxie</strong></a><a href="/feedback">Feedback / support</a></header>
+    <header className="onboarding-header"><a href="/"><img src="/brand/boxie-icon.webp" alt=""/><strong>Boxie</strong></a><a href="/feedback">Feedback / support</a></header>
     <section className="onboarding-card">
       <span className="onboarding-kicker">Your personal Outlook, as conversations</span>
       <h1>{!entry ? 'Opening your inbox…' : 'Connect Outlook. Meet your Boxie inbox.'}</h1>

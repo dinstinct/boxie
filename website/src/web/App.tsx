@@ -775,7 +775,7 @@ export function App({
           onClick={() => setDesktopRailExpanded((current) => !current)}
           title={desktopRailExpanded ? "Collapse navigation" : "Expand navigation"}
         >
-          <img src="/brand/boxie-icon.png" alt="" />
+          <img src="/brand/boxie-icon.webp" alt="" />
           <span className="rail-brand-name">Boxie</span>
           {desktopRailExpanded
             ? <ChevronLeft className="rail-brand-chevron" aria-hidden="true" />
@@ -1427,7 +1427,7 @@ function ConversationView({
         }}
       >
         <div className="boxie-composer-identity" aria-hidden="true">
-          <img src="/brand/boxie-icon.png" alt="" />
+          <img src="/brand/boxie-icon.webp" alt="" />
         </div>
         <div className="boxie-composer-main">
           <div className="boxie-composer-heading">
@@ -1493,7 +1493,7 @@ function PrivateAssistantExchange({ turn }: { turn: PrivateAssistantTurn }) {
       )}
       <article className={`private-message private-message-boxie private-message-${turn.status}`}>
         <header>
-          <span><img src="/brand/boxie-icon.png" alt="" />Boxie</span>
+          <span><img src="/brand/boxie-icon.webp" alt="" />Boxie</span>
           <b>Private</b>
         </header>
         {turn.status === "pending" ? (
@@ -1538,7 +1538,7 @@ function MessageBubble({
       <div className="message-bubble">
         <header>
           <span>
-            {isBoxie && <img src="/brand/boxie-icon.png" alt="" />}
+            {isBoxie && <img src="/brand/boxie-icon.webp" alt="" />}
             {isBoxie ? "Boxie" : showOriginal ? "Original email" : message.subject}
           </span>
           {isBoxie && <b>Welcome</b>}
@@ -1577,7 +1577,7 @@ function Avatar({ conversation, large = false }: { conversation: ConversationSum
         className={`avatar avatar-boxie ${large ? "avatar-large" : ""}`}
         aria-hidden="true"
       >
-        <img src="/brand/boxie-avatar.png" alt="" />
+        <img src="/brand/boxie-avatar.webp" alt="" />
       </span>
     );
   }
@@ -1606,7 +1606,7 @@ function EmptyList({ section, hasMail }: { section: Section; hasMail: boolean })
     : "No post-activation messages are stored yet. Run a sync after new mail arrives.";
   return (
     <div className="empty-list">
-      <img src="/brand/boxie-icon.png" alt="" />
+      <img src="/brand/boxie-icon.webp" alt="" />
       <strong>Quiet here</strong>
       <p>{message}</p>
     </div>
@@ -1617,7 +1617,7 @@ function WelcomeEmpty({ onBack }: { onBack: () => void }) {
   return (
     <div className="welcome-empty">
       <button type="button" className="back-button" onClick={onBack} aria-label="Back to conversations"><ArrowLeft aria-hidden="true" /></button>
-      <img src="/brand/boxie-avatar.png" alt="Boxie" />
+      <img src="/brand/boxie-avatar.webp" alt="Boxie" />
       <h2>Your mail is becoming conversations</h2>
       <p>Select a sender to inspect the post-activation stream and its original source.</p>
     </div>
